@@ -1,0 +1,349 @@
+Customer ID,Gender,Age,City,Membership Type,Total Spend,Items Purchased,Average Rating,Discount Applied,Days Since Last Purchase,Satisfaction Level,Cluster,Customer Segment
+101,Female,29,New York,Gold,1120.2,14,4.6,True,25,Satisfied,3,High-Potential Customers
+102,Male,34,Los Angeles,Silver,780.5,11,4.1,False,18,Neutral,3,High-Potential Customers
+103,Female,43,Chicago,Bronze,510.75,9,3.4,True,42,Unsatisfied,2,At-Risk Customers
+104,Male,30,San Francisco,Gold,1480.3,19,4.7,False,12,Satisfied,1,VIP Customers
+105,Male,27,Miami,Silver,720.4,13,4.0,True,55,Unsatisfied,2,At-Risk Customers
+106,Female,37,Houston,Bronze,440.8,8,3.1,False,22,Neutral,0,Occasional Customers
+107,Female,31,New York,Gold,1150.6,15,4.5,True,28,Satisfied,3,High-Potential Customers
+108,Male,35,Los Angeles,Silver,800.9,12,4.2,False,14,Neutral,3,High-Potential Customers
+109,Female,41,Chicago,Bronze,495.25,10,3.6,True,40,Unsatisfied,2,At-Risk Customers
+110,Male,28,San Francisco,Gold,1520.1,21,4.8,False,9,Satisfied,1,VIP Customers
+111,Male,32,Miami,Silver,690.3,11,3.8,True,34,Unsatisfied,2,At-Risk Customers
+112,Female,36,Houston,Bronze,470.5,7,3.2,False,20,Neutral,0,Occasional Customers
+113,Female,30,New York,Gold,1200.8,16,4.3,True,21,Satisfied,3,High-Potential Customers
+114,Male,33,Los Angeles,Silver,820.75,13,4.4,False,15,Satisfied,3,High-Potential Customers
+115,Female,42,Chicago,Bronze,530.4,9,3.5,True,38,Unsatisfied,2,At-Risk Customers
+116,Male,29,San Francisco,Gold,1360.2,18,4.9,False,11,Satisfied,1,VIP Customers
+117,Male,26,Miami,Silver,700.6,12,3.7,True,48,Unsatisfied,2,At-Risk Customers
+118,Female,38,Houston,Bronze,450.9,8,3.0,False,25,Neutral,0,Occasional Customers
+119,Female,32,New York,Gold,1170.3,14,4.7,True,29,Satisfied,3,High-Potential Customers
+120,Male,34,Los Angeles,Silver,790.2,11,4.0,False,16,Neutral,3,High-Potential Customers
+121,Female,43,Chicago,Bronze,505.75,10,3.3,True,41,Unsatisfied,2,At-Risk Customers
+122,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+123,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+124,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+125,Female,31,New York,Gold,1140.6,15,4.6,True,27,Satisfied,3,High-Potential Customers
+126,Male,35,Los Angeles,Silver,810.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+127,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+128,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+129,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+130,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+131,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+132,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+133,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+134,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+135,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+136,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+137,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+138,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+139,Female,43,Chicago,Bronze,500.75,10,3.3,True,40,Unsatisfied,2,At-Risk Customers
+140,Male,30,San Francisco,Gold,1460.5,20,4.8,False,12,Satisfied,1,VIP Customers
+141,Male,27,Miami,Silver,700.4,13,4.0,True,53,Unsatisfied,2,At-Risk Customers
+142,Female,37,Houston,Bronze,420.8,7,3.1,False,21,Neutral,0,Occasional Customers
+143,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+144,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+145,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+146,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+147,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+148,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+149,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+150,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+151,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+152,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+153,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+154,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+155,Female,31,New York,Gold,1140.6,15,4.6,True,27,Satisfied,3,High-Potential Customers
+156,Male,35,Los Angeles,Silver,810.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+157,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+158,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+159,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+160,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+161,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+162,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+163,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+164,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+165,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+166,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+167,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+168,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+169,Female,43,Chicago,Bronze,500.75,10,3.3,True,40,Unsatisfied,2,At-Risk Customers
+170,Male,30,San Francisco,Gold,1460.5,20,4.8,False,12,Satisfied,1,VIP Customers
+171,Male,27,Miami,Silver,700.4,13,4.0,True,53,Unsatisfied,2,At-Risk Customers
+173,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+174,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+175,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+176,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+177,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+178,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+179,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+180,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+181,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+182,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+183,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+184,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+185,Female,31,New York,Gold,1140.6,15,4.6,True,27,Satisfied,3,High-Potential Customers
+186,Male,35,Los Angeles,Silver,810.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+187,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+188,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+189,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+190,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+191,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+192,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+193,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+194,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+195,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+196,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+197,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+198,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+199,Female,43,Chicago,Bronze,500.75,10,3.3,True,40,Unsatisfied,2,At-Risk Customers
+200,Male,30,San Francisco,Gold,1460.5,20,4.8,False,12,Satisfied,1,VIP Customers
+201,Male,27,Miami,Silver,700.4,13,4.0,True,53,Unsatisfied,2,At-Risk Customers
+202,Female,37,Houston,Bronze,420.8,7,3.1,False,21,Neutral,0,Occasional Customers
+203,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+204,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+205,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+206,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+207,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+208,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+209,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+210,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+211,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+212,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+213,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+214,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+215,Female,31,New York,Gold,1140.6,15,4.6,True,27,Satisfied,3,High-Potential Customers
+216,Male,35,Los Angeles,Silver,810.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+217,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+218,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+219,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+220,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+221,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+222,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+223,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+224,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+225,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+226,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+227,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+228,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+229,Female,43,Chicago,Bronze,500.75,10,3.3,True,40,Unsatisfied,2,At-Risk Customers
+230,Male,30,San Francisco,Gold,1460.5,20,4.8,False,12,Satisfied,1,VIP Customers
+231,Male,27,Miami,Silver,700.4,13,4.0,True,53,Unsatisfied,2,At-Risk Customers
+232,Female,37,Houston,Bronze,420.8,7,3.1,False,21,Neutral,0,Occasional Customers
+233,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+234,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+235,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+236,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+237,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+238,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+239,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+240,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+241,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+242,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+243,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+245,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+246,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+247,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+248,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+249,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+250,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+251,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+252,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+253,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+254,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+255,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+256,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+257,Female,31,New York,Gold,1140.6,15,4.6,True,27,Satisfied,3,High-Potential Customers
+258,Male,35,Los Angeles,Silver,810.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+259,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+260,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+261,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+262,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+263,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+264,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+265,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+266,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+267,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+268,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+269,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+270,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+271,Female,43,Chicago,Bronze,500.75,10,3.3,True,40,Unsatisfied,2,At-Risk Customers
+272,Male,30,San Francisco,Gold,1460.5,20,4.8,False,12,Satisfied,1,VIP Customers
+273,Male,27,Miami,Silver,700.4,13,4.0,True,53,Unsatisfied,2,At-Risk Customers
+274,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+275,Female,31,New York,Gold,1140.6,15,4.5,True,27,Satisfied,3,High-Potential Customers
+276,Male,35,Los Angeles,Silver,820.9,12,4.3,False,12,Neutral,3,High-Potential Customers
+277,Female,41,Chicago,Bronze,480.25,9,3.6,True,38,Unsatisfied,2,At-Risk Customers
+278,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+279,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+280,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+281,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+282,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+283,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+284,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+285,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+286,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+287,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+288,Male,35,Los Angeles,Silver,820.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+289,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+290,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+291,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+292,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+293,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+294,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+295,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+296,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+297,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+298,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+299,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+300,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+301,Male,36,San Francisco,Gold,1420.8,19,4.6,False,11,Satisfied,1,VIP Customers
+302,Female,29,Miami,Silver,730.4,14,4.0,True,50,Unsatisfied,2,At-Risk Customers
+303,Female,35,Houston,Bronze,450.6,7,3.3,False,21,Neutral,0,Occasional Customers
+304,Male,31,New York,Gold,1210.6,17,4.8,True,18,Satisfied,1,VIP Customers
+305,Male,27,Los Angeles,Silver,780.9,11,4.2,False,16,Neutral,3,High-Potential Customers
+306,Female,42,Chicago,Bronze,495.25,10,3.5,True,35,Unsatisfied,2,At-Risk Customers
+307,Male,29,San Francisco,Gold,1390.2,18,4.7,False,9,Satisfied,1,VIP Customers
+308,Male,26,Miami,Silver,670.6,12,3.9,True,46,Unsatisfied,2,At-Risk Customers
+309,Female,38,Houston,Bronze,460.9,8,3.2,False,25,Neutral,0,Occasional Customers
+310,Female,32,New York,Gold,1170.3,14,4.5,True,21,Satisfied,3,High-Potential Customers
+311,Male,34,Los Angeles,Silver,810.2,11,4.0,False,14,Neutral,3,High-Potential Customers
+312,Female,43,Chicago,Bronze,515.75,9,3.3,True,38,Unsatisfied,2,At-Risk Customers
+313,Male,30,San Francisco,Gold,1450.5,20,4.8,False,12,Satisfied,1,VIP Customers
+314,Male,27,Miami,Silver,690.4,13,4.1,True,52,Unsatisfied,2,At-Risk Customers
+315,Female,37,Houston,Bronze,420.8,7,3.4,False,24,Neutral,0,Occasional Customers
+316,Female,31,New York,Gold,1130.6,15,4.5,True,26,Satisfied,3,High-Potential Customers
+317,Male,35,Los Angeles,Silver,820.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+318,Female,41,Chicago,Bronze,480.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+319,Male,28,San Francisco,Gold,1490.1,21,4.9,False,9,Satisfied,1,VIP Customers
+320,Male,32,Miami,Silver,680.3,10,3.8,True,32,Unsatisfied,2,At-Risk Customers
+321,Female,36,Houston,Bronze,470.5,8,3.0,False,18,Neutral,0,Occasional Customers
+322,Female,30,New York,Gold,1180.8,16,4.7,True,19,Satisfied,3,High-Potential Customers
+323,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+324,Female,43,Chicago,Bronze,505.75,10,3.3,True,39,Unsatisfied,2,At-Risk Customers
+325,Male,30,San Francisco,Gold,1470.5,20,4.8,False,13,Satisfied,1,VIP Customers
+326,Male,27,Miami,Silver,710.4,13,4.1,True,54,Unsatisfied,2,At-Risk Customers
+327,Female,37,Houston,Bronze,430.8,7,3.4,False,23,Neutral,0,Occasional Customers
+328,Female,31,New York,Gold,1140.6,15,4.5,True,27,Satisfied,3,High-Potential Customers
+329,Male,35,Los Angeles,Silver,820.9,12,4.3,False,13,Neutral,3,High-Potential Customers
+330,Female,41,Chicago,Bronze,485.25,9,3.6,True,39,Unsatisfied,2,At-Risk Customers
+331,Male,28,San Francisco,Gold,1500.1,21,4.9,False,10,Satisfied,1,VIP Customers
+332,Male,32,Miami,Silver,670.3,10,3.8,True,33,Unsatisfied,2,At-Risk Customers
+333,Female,36,Houston,Bronze,460.5,8,3.1,False,19,Neutral,0,Occasional Customers
+334,Female,30,New York,Gold,1190.8,16,4.5,True,20,Satisfied,3,High-Potential Customers
+335,Male,33,Los Angeles,Silver,830.75,13,4.2,False,14,Satisfied,3,High-Potential Customers
+336,Female,42,Chicago,Bronze,520.4,9,3.5,True,37,Unsatisfied,2,At-Risk Customers
+337,Male,29,San Francisco,Gold,1370.2,18,4.7,False,10,Satisfied,1,VIP Customers
+338,Male,26,Miami,Silver,690.6,12,3.9,True,47,Unsatisfied,2,At-Risk Customers
+339,Female,38,Houston,Bronze,440.9,8,3.2,False,24,Neutral,0,Occasional Customers
+340,Female,32,New York,Gold,1160.3,14,4.4,True,22,Satisfied,3,High-Potential Customers
+341,Male,34,Los Angeles,Silver,800.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+342,Female,43,Chicago,Bronze,525.75,9,3.3,True,40,Unsatisfied,2,At-Risk Customers
+343,Male,30,San Francisco,Gold,1460.5,20,4.8,False,11,Satisfied,1,VIP Customers
+344,Male,27,Miami,Silver,720.4,13,4.0,True,55,Unsatisfied,2,At-Risk Customers
+345,Female,37,Houston,Bronze,440.8,7,3.2,False,25,Neutral,0,Occasional Customers
+346,Female,31,New York,Gold,1150.6,15,4.5,True,28,Satisfied,3,High-Potential Customers
+347,Male,35,Los Angeles,Silver,830.9,12,4.3,False,14,Neutral,3,High-Potential Customers
+348,Female,41,Chicago,Bronze,490.25,9,3.6,True,40,Unsatisfied,2,At-Risk Customers
+349,Male,28,San Francisco,Gold,1480.1,21,4.9,False,10,Satisfied,1,VIP Customers
+350,Male,32,Miami,Silver,690.3,10,3.8,True,34,Unsatisfied,2,At-Risk Customers
+351,Female,36,Houston,Bronze,480.5,8,3.1,False,20,Neutral,0,Occasional Customers
+352,Female,30,New York,Gold,1170.8,16,4.7,True,21,Satisfied,3,High-Potential Customers
+353,Male,34,Los Angeles,Silver,790.2,11,4.0,False,15,Neutral,3,High-Potential Customers
+354,Female,43,Chicago,Bronze,510.75,10,3.3,True,41,Unsatisfied,2,At-Risk Customers
+355,Male,30,San Francisco,Gold,1440.5,19,4.6,False,12,Satisfied,1,VIP Customers
+356,Male,27,Miami,Silver,700.4,13,4.1,True,56,Unsatisfied,2,At-Risk Customers
+357,Female,37,Houston,Bronze,410.8,7,3.4,False,26,Neutral,0,Occasional Customers
+358,Female,31,New York,Gold,1160.6,15,4.5,True,29,Satisfied,3,High-Potential Customers
+359,Male,35,Los Angeles,Silver,810.9,12,4.3,False,14,Neutral,3,High-Potential Customers
+360,Female,41,Chicago,Bronze,495.25,9,3.6,True,41,Unsatisfied,2,At-Risk Customers
+361,Male,28,San Francisco,Gold,1490.1,21,4.9,False,10,Satisfied,1,VIP Customers
+362,Male,32,Miami,Silver,660.3,10,3.8,True,35,Unsatisfied,2,At-Risk Customers
+363,Female,36,Houston,Bronze,430.5,8,3.1,False,21,Neutral,0,Occasional Customers
+364,Female,30,New York,Gold,1200.8,16,4.7,True,22,Satisfied,3,High-Potential Customers
+365,Male,34,Los Angeles,Silver,780.2,11,4.1,False,16,Neutral,3,High-Potential Customers
+366,Female,43,Chicago,Bronze,505.75,10,3.3,True,42,Unsatisfied,2,At-Risk Customers
+367,Male,30,San Francisco,Gold,1460.5,20,4.8,False,13,Satisfied,1,VIP Customers
+368,Male,27,Miami,Silver,710.4,13,4.1,True,57,Unsatisfied,2,At-Risk Customers
+369,Female,37,Houston,Bronze,450.8,7,3.4,False,24,Neutral,0,Occasional Customers
+370,Female,31,New York,Gold,1140.6,15,4.5,True,30,Satisfied,3,High-Potential Customers
+371,Male,35,Los Angeles,Silver,800.9,12,4.1,False,17,Neutral,3,High-Potential Customers
+372,Female,41,Chicago,Bronze,475.25,9,3.6,True,42,Unsatisfied,2,At-Risk Customers
+373,Male,28,San Francisco,Gold,1480.1,21,4.9,False,11,Satisfied,1,VIP Customers
+374,Male,32,Miami,Silver,660.3,10,3.8,True,36,Unsatisfied,2,At-Risk Customers
+375,Female,36,Houston,Bronze,470.5,8,3.0,False,22,Neutral,0,Occasional Customers
+376,Female,30,New York,Gold,1190.8,16,4.5,True,23,Satisfied,3,High-Potential Customers
+377,Male,33,Los Angeles,Silver,770.2,11,4.2,False,18,Neutral,3,High-Potential Customers
+378,Female,43,Chicago,Bronze,515.75,10,3.3,True,43,Unsatisfied,2,At-Risk Customers
+379,Male,30,San Francisco,Gold,1450.5,19,4.6,False,12,Satisfied,1,VIP Customers
+380,Male,27,Miami,Silver,710.4,13,4.1,True,58,Unsatisfied,2,At-Risk Customers
+381,Female,37,Houston,Bronze,430.8,7,3.4,False,27,Neutral,0,Occasional Customers
+382,Female,31,New York,Gold,1160.6,15,4.5,True,31,Satisfied,3,High-Potential Customers
+383,Male,35,Los Angeles,Silver,820.9,12,4.3,False,15,Neutral,3,High-Potential Customers
+384,Female,41,Chicago,Bronze,495.25,9,3.6,True,43,Unsatisfied,2,At-Risk Customers
+385,Male,28,San Francisco,Gold,1490.1,21,4.9,False,10,Satisfied,1,VIP Customers
+386,Male,32,Miami,Silver,660.3,10,3.8,True,37,Unsatisfied,2,At-Risk Customers
+387,Female,36,Houston,Bronze,440.5,8,3.1,False,23,Neutral,0,Occasional Customers
+388,Female,30,New York,Gold,1200.8,16,4.7,True,24,Satisfied,3,High-Potential Customers
+389,Male,34,Los Angeles,Silver,780.2,11,4.1,False,16,Neutral,3,High-Potential Customers
+390,Female,43,Chicago,Bronze,505.75,10,3.3,True,44,Unsatisfied,2,At-Risk Customers
+391,Male,30,San Francisco,Gold,1460.5,20,4.8,False,13,Satisfied,1,VIP Customers
+392,Male,27,Miami,Silver,710.4,13,4.1,True,59,Unsatisfied,2,At-Risk Customers
+393,Female,37,Houston,Bronze,450.8,7,3.4,False,28,Neutral,0,Occasional Customers
+394,Female,31,New York,Gold,1140.6,15,4.5,True,32,Satisfied,3,High-Potential Customers
+395,Male,35,Los Angeles,Silver,800.9,12,4.1,False,17,Neutral,3,High-Potential Customers
+396,Female,41,Chicago,Bronze,475.25,9,3.6,True,44,Unsatisfied,2,At-Risk Customers
+397,Male,28,San Francisco,Gold,1480.1,21,4.9,False,12,Satisfied,1,VIP Customers
+398,Male,32,Miami,Silver,660.3,10,3.8,True,38,Unsatisfied,2,At-Risk Customers
+399,Female,36,Houston,Bronze,470.5,8,3.0,False,22,Neutral,0,Occasional Customers
+400,Female,30,New York,Gold,1190.8,16,4.5,True,25,Satisfied,3,High-Potential Customers
+401,Male,33,Los Angeles,Silver,800.2,11,4.1,False,18,Neutral,3,High-Potential Customers
+402,Female,43,Chicago,Bronze,515.75,10,3.3,True,45,Unsatisfied,2,At-Risk Customers
+403,Male,30,San Francisco,Gold,1450.5,19,4.6,False,13,Satisfied,1,VIP Customers
+404,Male,27,Miami,Silver,710.4,13,4.1,True,60,Unsatisfied,2,At-Risk Customers
+405,Female,37,Houston,Bronze,430.8,7,3.4,False,29,Neutral,0,Occasional Customers
+406,Female,31,New York,Gold,1160.6,15,4.5,True,33,Satisfied,3,High-Potential Customers
+407,Male,35,Los Angeles,Silver,820.9,12,4.3,False,16,Neutral,3,High-Potential Customers
+408,Female,41,Chicago,Bronze,495.25,9,3.6,True,45,Unsatisfied,2,At-Risk Customers
+409,Male,28,San Francisco,Gold,1490.1,21,4.9,False,11,Satisfied,1,VIP Customers
+410,Male,32,Miami,Silver,660.3,10,3.8,True,39,Unsatisfied,2,At-Risk Customers
+411,Female,36,Houston,Bronze,440.5,8,3.1,False,24,Neutral,0,Occasional Customers
+412,Female,30,New York,Gold,1200.8,16,4.7,True,25,Satisfied,3,High-Potential Customers
+413,Male,34,Los Angeles,Silver,780.2,11,4.1,False,17,Neutral,3,High-Potential Customers
+414,Female,43,Chicago,Bronze,505.75,10,3.3,True,46,Unsatisfied,2,At-Risk Customers
+415,Male,30,San Francisco,Gold,1460.5,20,4.8,False,14,Satisfied,1,VIP Customers
+416,Male,27,Miami,Silver,710.4,13,4.1,True,61,Unsatisfied,2,At-Risk Customers
+417,Female,37,Houston,Bronze,450.8,7,3.4,False,30,Neutral,0,Occasional Customers
+418,Female,31,New York,Gold,1140.6,15,4.5,True,34,Satisfied,3,High-Potential Customers
+419,Male,35,Los Angeles,Silver,800.9,12,4.1,False,19,Neutral,3,High-Potential Customers
+420,Female,41,Chicago,Bronze,475.25,9,3.6,True,46,Unsatisfied,2,At-Risk Customers
+421,Male,28,San Francisco,Gold,1480.1,21,4.9,False,12,Satisfied,1,VIP Customers
+422,Male,32,Miami,Silver,660.3,10,3.8,True,40,Unsatisfied,2,At-Risk Customers
+423,Female,36,Houston,Bronze,470.5,8,3.0,False,26,Neutral,0,Occasional Customers
+424,Female,30,New York,Gold,1190.8,16,4.5,True,27,Satisfied,3,High-Potential Customers
+425,Male,34,Los Angeles,Silver,780.2,11,4.2,False,18,Neutral,3,High-Potential Customers
+426,Female,43,Chicago,Bronze,515.75,10,3.3,True,47,Unsatisfied,2,At-Risk Customers
+427,Male,30,San Francisco,Gold,1450.5,19,4.6,False,14,Satisfied,1,VIP Customers
+428,Male,27,Miami,Silver,710.4,13,4.1,True,62,Unsatisfied,2,At-Risk Customers
+429,Female,37,Houston,Bronze,430.8,7,3.4,False,31,Neutral,0,Occasional Customers
+430,Female,31,New York,Gold,1160.6,15,4.5,True,35,Satisfied,3,High-Potential Customers
+431,Male,35,Los Angeles,Silver,820.9,12,4.3,False,20,Neutral,3,High-Potential Customers
+432,Female,41,Chicago,Bronze,495.25,9,3.6,True,47,Unsatisfied,2,At-Risk Customers
+433,Male,28,San Francisco,Gold,1490.1,21,4.9,False,11,Satisfied,1,VIP Customers
+434,Male,32,Miami,Silver,660.3,10,3.8,True,41,Unsatisfied,2,At-Risk Customers
+435,Female,36,Houston,Bronze,440.5,8,3.1,False,28,Neutral,0,Occasional Customers
+436,Female,30,New York,Gold,1200.8,16,4.7,True,28,Satisfied,3,High-Potential Customers
+437,Male,34,Los Angeles,Silver,780.2,11,4.1,False,19,Neutral,3,High-Potential Customers
+438,Female,43,Chicago,Bronze,505.75,10,3.3,True,48,Unsatisfied,2,At-Risk Customers
+439,Male,30,San Francisco,Gold,1460.5,20,4.8,False,15,Satisfied,1,VIP Customers
+440,Male,27,Miami,Silver,710.4,13,4.1,True,63,Unsatisfied,2,At-Risk Customers
+441,Female,37,Houston,Bronze,450.8,7,3.4,False,32,Neutral,0,Occasional Customers
+442,Female,31,New York,Gold,1140.6,15,4.5,True,36,Satisfied,3,High-Potential Customers
+443,Male,35,Los Angeles,Silver,800.9,12,4.1,False,20,Neutral,3,High-Potential Customers
+444,Female,41,Chicago,Bronze,475.25,9,3.6,True,48,Unsatisfied,2,At-Risk Customers
+445,Male,28,San Francisco,Gold,1480.1,21,4.9,False,13,Satisfied,1,VIP Customers
+446,Male,32,Miami,Silver,660.3,10,3.8,True,42,Unsatisfied,2,At-Risk Customers
+447,Female,36,Houston,Bronze,470.5,8,3.0,False,27,Neutral,0,Occasional Customers
+448,Female,30,New York,Gold,1190.8,16,4.5,True,28,Satisfied,3,High-Potential Customers
+449,Male,34,Los Angeles,Silver,780.2,11,4.2,False,21,Neutral,3,High-Potential Customers
+450,Female,43,Chicago,Bronze,515.75,10,3.3,True,49,Unsatisfied,2,At-Risk Customers
