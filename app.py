@@ -244,4 +244,112 @@ else:
             st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
     elif page == "Customer Explorer":
         st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
-        st.info("Search, filter, and inspect individual customer records.")
+        st.caption("Search, filter, and inspect detailed behavioral profiles and segment classifications.")
+        st.divider()
+
+        @st.cache_data
+        def load_explorer_data():
+            data = pd.read_csv("customer_intelligence_data.csv")
+            feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
+            if all(col in data.columns for col in feature_cols):
+                scaled_vals = scaler.transform(data[feature_cols])
+                cluster_preds = model.predict(scaled_vals)
+                data["Segment"] = [segment_names.get(c, f"Cluster {c}") for c in cluster_preds]
+            return data
+
+        try:
+            df = load_explorer_data()
+
+            # Filter Controls
+            st.markdown("### 🔍 Filters & Search")
+            f1, f2, f3 = st.columns([1.5, 2, 2])
+
+            with f1:
+                available_segments = ["All"] + sorted(list(df["Segment"].dropna().unique())) if "Segment" in df.columns else ["All"]
+                selected_segment = st.selectbox("Customer Segment", available_segments)
+
+            with f2:
+                spend_range = st.slider(
+                    "Total Spend ($)",
+                    min_value=float(df["Total Spend"].min()),
+                    max_value=float(df["Total Spend"].max()),
+                    value=(float(df["Total Spend"].min()), float(df["Total Spend"].max())),
+                    step=25.0
+                )
+
+            with f3:
+                min_rating, max_rating = st.slider(
+                    "Average Rating",
+                    min_value=1.0,
+                    max_value=5.0,
+                    value=(1.0, 5.0),
+                    step=0.1
+                )
+
+            # Apply filters
+            filtered_df = df[
+                (df["Total Spend"] >= spend_range[0]) & 
+                (df["Total Spend"] <= spend_range[1]) &
+                (df["Average Rating"] >= min_rating) &
+                (df["Average Rating"] <= max_rating)
+            ]
+
+            if selected_segment != "All" and "Segment" in df.columns:
+                filtered_df = filtered_df[filtered_df["Segment"] == selected_segment]
+
+            # Results & Export Bar
+            r_col1, r_col2 = st.columns([3, 1])
+            with r_col1:
+                st.markdown(f"**Showing {len(filtered_df):,} of {len(df):,} total customers**")
+            with r_col2:
+                csv_data = filtered_df.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Download Filtered CSV",
+                    data=csv_data,
+                    file_name="filtered_customer_data.csv",
+                    mime="text/csv",
+                    use_container_width=True
+                )
+
+            # Interactive Data Table
+            st.dataframe(
+                filtered_df,
+                use_container_width=True,
+                height=320,
+                column_config={
+                    "Total Spend": st.column_config.NumberColumn("Total Spend", format="$%.2f"),
+                    "Average Rating": st.column_config.NumberColumn("Rating", format="%.2f ⭐"),
+                    "Items Purchased": st.column_config.NumberColumn("Items Purchased", format="%d 📦"),
+                    "Days Since Last Purchase": st.column_config.NumberColumn("Recency", format="%d days")
+                }
+            )
+
+            st.divider()
+
+            # Single Customer Deep Dive
+            st.subheader("👤 Individual Customer Deep-Dive")
+            if not filtered_df.empty:
+                selected_idx = st.selectbox(
+                    "Select Customer Record (Row Index)",
+                    options=filtered_df.index,
+                    format_func=lambda x: f"Customer #{x} - {filtered_df.loc[x, 'Segment'] if 'Segment' in filtered_df.columns else ''} (${filtered_df.loc[x, 'Total Spend']:,.2f})"
+                )
+
+                selected_customer = filtered_df.loc[selected_idx]
+
+                c_metric1, c_metric2, c_metric3, c_metric4, c_metric5 = st.columns(5)
+                with c_metric1:
+                    st.metric("Total Spend", f"${selected_customer['Total Spend']:,.2f}")
+                with c_metric2:
+                    st.metric("Items Purchased", f"{int(selected_customer['Items Purchased'])}")
+                with c_metric3:
+                    st.metric("Avg Rating", f"{selected_customer['Average Rating']:.2f} ⭐")
+                with c_metric4:
+                    st.metric("Recency", f"{int(selected_customer['Days Since Last Purchase'])} days")
+                with c_metric5:
+                    st.metric("Assigned Cohort", f"{selected_customer.get('Segment', 'N/A')}")
+            else:
+                st.warning("No customer records match the current filter criteria.")
+
+        except FileNotFoundError:
+            st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
