@@ -102,12 +102,11 @@ else:
 
     # Load artifacts (cache for performance)
     @st.cache_resource
-    def load_artifacts():
-        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
-        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
-        segment_names = joblib.load("segment_names.pkl")[cite: 1]
-        return model, scaler, segment_names
-
+def load_artifacts():
+    model = joblib.load("customer_segmentation_model.pkl")
+    scaler = joblib.load("customer_scaler.pkl")
+    segment_names = joblib.load("segment_names.pkl")
+    return model, scaler, segment_names
     model, scaler, segment_names = load_artifacts()
 
     # ----------------- VIEW 1: CUSTOMER SEGMENT PREDICTOR -----------------
