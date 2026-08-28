@@ -141,8 +141,102 @@ else:
 
     elif page == "Dashboard":
         st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
-        st.info("Visual breakdowns & cohort charts go here.")
+        st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
+        st.divider()
 
+        # Load dataset
+        @st.cache_data
+        def load_data():
+            df = pd.read_csv("customer_intelligence_data.csv")
+            return df
+
+        try:
+            df = load_data()
+
+            # Top KPI Summary Cards
+            kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+            with kpi1:
+                st.metric("Total Customers", f"{len(df):,}")
+            with kpi2:
+                st.metric("Avg. Total Spend", f"${df['Total Spend'].mean():,.2f}")
+            with kpi3:
+                st.metric("Avg. Rating", f"{df['Average Rating'].mean():.2f} / 5.0")
+            with kpi4:
+                st.metric("Avg. Recency", f"{df['Days Since Last Purchase'].mean():.1f} days")
+
+            st.write("")
+            st.divider()
+
+            # Row 1: Segment Distribution & Spend vs Rating
+            col_chart1, col_chart2 = st.columns([1, 1.3])
+
+            with col_chart1:
+                st.subheader("👥 Customer Segment Breakdown")
+                if "Segment" in df.columns:
+                    segment_counts = df["Segment"].value_counts().reset_index()
+                    segment_counts.columns = ["Segment", "Count"]
+                    fig_pie = px.pie(
+                        segment_counts,
+                        names="Segment",
+                        values="Count",
+                        hole=0.45,
+                        color_discrete_sequence=px.colors.qualitative.Pastel
+                    )
+                    fig_pie.update_layout(
+                        margin=dict(t=20, b=20, l=10, r=10),
+                        legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5)
+                    )
+                    st.plotly_chart(fig_pie, use_container_width=True)
+                else:
+                    st.info("Segment column not found in dataset.")
+
+            with col_chart2:
+                st.subheader("💰 Spend vs. Items Purchased")
+                fig_scatter = px.scatter(
+                    df,
+                    x="Items Purchased",
+                    y="Total Spend",
+                    color="Segment" if "Segment" in df.columns else None,
+                    size="Average Rating",
+                    hover_data=["Days Since Last Purchase"],
+                    template="plotly_dark",
+                    opacity=0.8
+                )
+                fig_scatter.update_layout(margin=dict(t=20, b=20, l=10, r=10))
+                st.plotly_chart(fig_scatter, use_container_width=True)
+
+            st.divider()
+
+            # Row 2: Recency vs Rating Distribution
+            col_chart3, col_chart4 = st.columns(2)
+
+            with col_chart3:
+                st.subheader("⏳ Recency Distribution (Days)")
+                fig_hist = px.histogram(
+                    df,
+                    x="Days Since Last Purchase",
+                    nbins=25,
+                    marginal="box",
+                    color_discrete_sequence=["#FF8F6B"],
+                    template="plotly_dark"
+                )
+                fig_hist.update_layout(margin=dict(t=20, b=20, l=10, r=10), yaxis_title="Customer Count")
+                st.plotly_chart(fig_hist, use_container_width=True)
+
+            with col_chart4:
+                st.subheader("⭐ Average Rating Distribution")
+                fig_rating = px.histogram(
+                    df,
+                    x="Average Rating",
+                    nbins=20,
+                    color_discrete_sequence=["#00D26A"],
+                    template="plotly_dark"
+                )
+                fig_rating.update_layout(margin=dict(t=20, b=20, l=10, r=10), yaxis_title="Customer Count")
+                st.plotly_chart(fig_rating, use_container_width=True)
+
+        except FileNotFoundError:
+            st.error("`customer_intelligence_data.csv` was not found. Please ensure the CSV file is present in the repository.")
     elif page == "Customer Explorer":
         st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
         st.info("Search, filter, and inspect individual customer records.")
