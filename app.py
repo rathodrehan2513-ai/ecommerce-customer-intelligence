@@ -188,84 +188,243 @@ else:
     # ----------------- VIEW 1: PREDICTOR -----------------
     if page == "⚡ Neural Segment Predictor":
         st.markdown('<h1>// NEURAL SEGMENT CLASSIFIER</h1>', unsafe_allow_html=True)
-        st.caption("Live high-dimensional behavioral clustering engine via calibrated K-Means architecture.")
+        st.caption("Live behavioral clustering, scenario simulation, and multi-node batch inference.")
         st.divider()
 
-        c1, c2 = st.columns(2)
-        with c1:
-            total_spend = st.number_input("Total Lifetime Value ($)", min_value=0.0, value=1250.0, step=50.0)
-            items_purchased = st.number_input("Purchased Volume Units", min_value=1, value=12, step=1)
-        with c2:
-            avg_rating = st.slider("Sentiment Rating Index", min_value=1.0, max_value=5.0, value=4.2, step=0.1)
-            recency = st.number_input("Temporal Recency (Days Inactive)", min_value=0, value=14, step=1)
+        mode_tab1, mode_tab2 = st.tabs(["🎯 SINGLE NODE SIMULATOR", "📂 BATCH CSV CLUSTER INGESTION"])
 
-        predict_btn = st.button("EXECUTE NEURAL INFERENCE", type="primary", use_container_width=True)
+        with mode_tab1:
+            st.markdown("##### ⚡ Quick Persona Presets")
+            p_col1, p_col2, p_col3, p_col4 = st.columns(4)
+            
+            if "preset_spend" not in st.session_state:
+                st.session_state["preset_spend"] = 1250.0
+                st.session_state["preset_items"] = 12
+                st.session_state["preset_rating"] = 4.2
+                st.session_state["preset_recency"] = 14
 
-        if predict_btn:
-            input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
-            scaled_features = scaler.transform(input_data)
-            cluster_id = model.predict(scaled_features)[0]
-            cluster_label = segment_names.get(cluster_id, f"Cluster #{cluster_id}")
+            if p_col1.button("👑 Whale / High VIP", use_container_width=True):
+                st.session_state["preset_spend"] = 2800.0
+                st.session_state["preset_items"] = 28
+                st.session_state["preset_rating"] = 4.9
+                st.session_state["preset_recency"] = 4
+                st.rerun()
+
+            if p_col2.button("⚠️ Dormant Churn Risk", use_container_width=True):
+                st.session_state["preset_spend"] = 350.0
+                st.session_state["preset_items"] = 3
+                st.session_state["preset_rating"] = 2.1
+                st.session_state["preset_recency"] = 85
+                st.rerun()
+
+            if p_col3.button("🛍️ Frequent Low-Ticket", use_container_width=True):
+                st.session_state["preset_spend"] = 650.0
+                st.session_state["preset_items"] = 18
+                st.session_state["preset_rating"] = 4.1
+                st.session_state["preset_recency"] = 7
+                st.rerun()
+
+            if p_col4.button("🌱 New Onboarded Node", use_container_width=True):
+                st.session_state["preset_spend"] = 150.0
+                st.session_state["preset_items"] = 2
+                st.session_state["preset_rating"] = 3.5
+                st.session_state["preset_recency"] = 1
+                st.rerun()
 
             st.write("")
-            st.markdown(f"""
-            <div class="hud-card" style="border-left: 4px solid #00ff87;">
-                <div class="hud-metric-label">IDENTIFIED BEHAVIORAL MATRIX</div>
-                <div class="hud-metric-value" style="color: #00ff87;">{cluster_label}</div>
-                <p style="color: #8b949e; margin-top: 0.5rem; font-size: 0.9rem;">Cluster Vector ID: <span style="color:#00f2fe;">0x0{cluster_id}</span> | Confidence Status: OPTIMAL</p>
-            </div>
-            """, unsafe_allow_html=True)
 
-            tab_radar, tab_strategy = st.tabs(["📡 RADAR PROFILE", "💾 DIRECTIVE ACTION PLAN"])
-
-            with tab_radar:
-                categories = ['Spend Density', 'Basket Volume', 'Sentiment Index', 'Engagement Velocity']
-                spend_score = min(100, (total_spend / 2500.0) * 100)
-                basket_score = min(100, (items_purchased / 25.0) * 100)
-                rating_score = (avg_rating / 5.0) * 100
-                recency_score = max(0, 100 - (recency / 90.0 * 100))
-                values = [spend_score, basket_score, rating_score, recency_score]
-
-                fig_radar = go.Figure()
-                fig_radar.add_trace(go.Scatterpolar(
-                    r=values + [values[0]],
-                    theta=categories + [categories[0]],
-                    fill='toself',
-                    fillcolor='rgba(0, 242, 254, 0.25)',
-                    line=dict(color='#00f2fe', width=2),
-                    name='Customer Profile'
-                ))
-                fig_radar.update_layout(
-                    polar=dict(
-                        radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.1)"),
-                        angularaxis=dict(gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(0, 242, 254, 0.5)")
-                    ),
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    showlegend=False,
-                    font=dict(color="#00f2fe", family="Rajdhani")
+            c1, c2 = st.columns(2)
+            with c1:
+                total_spend = st.number_input(
+                    "Total Lifetime Value ($)", 
+                    min_value=0.0, 
+                    max_value=10000.0,
+                    value=float(st.session_state["preset_spend"]), 
+                    step=50.0
                 )
-                st.plotly_chart(fig_radar, use_container_width=True)
+                items_purchased = st.number_input(
+                    "Purchased Volume Units", 
+                    min_value=1, 
+                    max_value=100,
+                    value=int(st.session_state["preset_items"]), 
+                    step=1
+                )
+            with c2:
+                avg_rating = st.slider(
+                    "Sentiment Rating Index", 
+                    min_value=1.0, 
+                    max_value=5.0, 
+                    value=float(st.session_state["preset_rating"]), 
+                    step=0.1
+                )
+                recency = st.number_input(
+                    "Temporal Recency (Days Inactive)", 
+                    min_value=0, 
+                    max_value=365,
+                    value=int(st.session_state["preset_recency"]), 
+                    step=1
+                )
 
-            with tab_strategy:
-                if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
-                    st.success("🌟 PRIORITY HIGH-CAPITAL NODE")
-                    st.markdown("""
-                    * **Direct Protocol:** Provision exclusive concierge support channel.
-                    * **Upsell Vector:** Dispatch automated alpha access to upcoming catalog releases.
-                    """)
-                elif recency > 45:
-                    st.error("⚠️ HIGH-LATENCY AT-RISK NODE")
-                    st.markdown("""
-                    * **Re-engagement Trigger:** Deploy targeted reactivation incentives.
-                    * **Telemetry Diagnostic:** Dispatch 1-click sentiment diagnostic workflow.
-                    """)
+            predict_btn = st.button("EXECUTE NEURAL INFERENCE", type="primary", use_container_width=True)
+
+            if predict_btn or "last_prediction" in st.session_state:
+                st.session_state["last_prediction"] = True
+                
+                input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
+                scaled_features = scaler.transform(input_data)
+                cluster_id = model.predict(scaled_features)[0]
+                cluster_label = segment_names.get(cluster_id, f"Cluster #{cluster_id}")
+                
+                centroids = model.cluster_centers_
+                distances = np.linalg.norm(centroids - scaled_features, axis=1)
+                closest_confidence = max(0, 100 - (distances[cluster_id] * 25))
+
+                st.write("")
+                st.markdown(f"""
+                <div class="hud-card" style="border-left: 4px solid #00ff87;">
+                    <div class="hud-metric-label">IDENTIFIED BEHAVIORAL MATRIX</div>
+                    <div class="hud-metric-value" style="color: #00ff87;">{cluster_label}</div>
+                    <p style="color: #8b949e; margin-top: 0.5rem; font-size: 0.9rem;">
+                        Cluster Vector ID: <span style="color:#00f2fe;">0x0{cluster_id}</span> | 
+                        Cluster Affinity: <span style="color:#00ff87;">{closest_confidence:.1f}%</span> | 
+                        Spatial Distortion: <span style="color:#ff007f;">{distances[cluster_id]:.3f}</span>
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
+
+                tab_radar, tab_simulation, tab_proximity, tab_strategy = st.tabs([
+                    "📡 RADAR PROFILE", 
+                    "🧪 WHAT-IF SANDBOX", 
+                    "🌌 CENTROID DISTANCES", 
+                    "💾 DIRECTIVE ACTION PLAN"
+                ])
+
+                with tab_radar:
+                    categories = ['Spend Density', 'Basket Volume', 'Sentiment Index', 'Engagement Velocity']
+                    spend_score = min(100, (total_spend / 2500.0) * 100)
+                    basket_score = min(100, (items_purchased / 25.0) * 100)
+                    rating_score = (avg_rating / 5.0) * 100
+                    recency_score = max(0, 100 - (recency / 90.0 * 100))
+                    values = [spend_score, basket_score, rating_score, recency_score]
+
+                    fig_radar = go.Figure()
+                    fig_radar.add_trace(go.Scatterpolar(
+                        r=values + [values[0]],
+                        theta=categories + [categories[0]],
+                        fill='toself',
+                        fillcolor='rgba(0, 242, 254, 0.25)',
+                        line=dict(color='#00f2fe', width=2),
+                        name='Current Node'
+                    ))
+                    fig_radar.update_layout(
+                        polar=dict(
+                            radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.1)"),
+                            angularaxis=dict(gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(0, 242, 254, 0.5)")
+                        ),
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        showlegend=False,
+                        font=dict(color="#00f2fe", family="Rajdhani")
+                    )
+                    st.plotly_chart(fig_radar, use_container_width=True)
+
+                with tab_simulation:
+                    st.markdown("##### 🧪 Real-Time What-If Upsell / Retention Simulator")
+                    sim_col1, sim_col2 = st.columns(2)
+                    with sim_col1:
+                        add_spend = st.slider("Simulate Additional Spend ($)", 0.0, 2000.0, 250.0, step=25.0)
+                        add_items = st.slider("Simulate Additional Items", 0, 15, 2, step=1)
+                    with sim_col2:
+                        reduce_recency = st.slider("Simulated Re-engagement (Days Subtracted)", 0, int(recency), min(5, int(recency)), step=1)
+
+                    simulated_spend = total_spend + add_spend
+                    simulated_items = items_purchased + add_items
+                    simulated_recency = max(0, recency - reduce_recency)
+                    
+                    sim_input = np.array([[simulated_spend, simulated_items, avg_rating, simulated_recency]])
+                    sim_scaled = scaler.transform(sim_input)
+                    sim_cluster_id = model.predict(sim_scaled)[0]
+                    sim_label = segment_names.get(sim_cluster_id, f"Cluster #{sim_cluster_id}")
+
+                    st.markdown(f"""
+                    <div style="background: rgba(0, 242, 254, 0.05); border: 1px dashed #00f2fe; border-radius: 8px; padding: 1rem; margin-top: 0.5rem;">
+                        <span style="color:#8b949e; font-size:0.85rem;">PREDICTED SHIFT AFTER UPGRADE:</span>
+                        <h3 style="color:#00ff87; margin:0.2rem 0;">{sim_label}</h3>
+                        <p style="color:#ccc; font-size:0.9rem; margin:0;">
+                            Simulated Lifetime Value: <b>${simulated_spend:,.2f}</b> | Basket: <b>{simulated_items} units</b> | Recency: <b>{simulated_recency} days</b>
+                        </p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                with tab_proximity:
+                    st.markdown("##### 🌌 Distance to All Cluster Centers")
+                    dist_df = pd.DataFrame({
+                        "Cluster": [segment_names.get(i, f"Cluster {i}") for i in range(len(centroids))],
+                        "Normalized Distance": distances
+                    }).sort_values("Normalized Distance")
+
+                    fig_dist = px.bar(
+                        dist_df,
+                        x="Normalized Distance",
+                        y="Cluster",
+                        orientation="h",
+                        color="Normalized Distance",
+                        color_continuous_scale=[[0, "#00ff87"], [1, "#ff007f"]],
+                        template="plotly_dark"
+                    )
+                    fig_dist.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(t=10, b=10, l=10, r=10))
+                    st.plotly_chart(fig_dist, use_container_width=True)
+
+                with tab_strategy:
+                    if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
+                        st.success("🌟 PRIORITY HIGH-CAPITAL NODE")
+                        st.markdown("""
+                        * **Direct Protocol:** Provision exclusive concierge support channel.
+                        * **Upsell Vector:** Dispatch automated alpha access to upcoming catalog releases.
+                        * **Retention Guard:** Alert account executive if inactivity exceeds 20 days.
+                        """)
+                    elif recency > 45:
+                        st.error("⚠️ HIGH-LATENCY AT-RISK NODE")
+                        st.markdown("""
+                        * **Re-engagement Trigger:** Deploy targeted reactivation incentives with 20% discount.
+                        * **Telemetry Diagnostic:** Dispatch 1-click sentiment diagnostic workflow.
+                        * **Multi-Channel Sync:** Trigger SMS reminders.
+                        """)
+                    else:
+                        st.info("📈 EXPANSION & GROWTH VECTOR")
+                        st.markdown("""
+                        * **Cross-Sell Stream:** Surface algorithmic product associations based on prior carts.
+                        * **Cadence Optimization:** Implement recurring loyalty rewards.
+                        * **Review Incentive:** Offer loyalty points in exchange for verified feedback.
+                        """)
+
+        with mode_tab2:
+            st.markdown("##### 📂 Upload Batch Customer CSV for Neural Classification")
+            uploaded_file = st.file_uploader("Upload CSV matching required features (Total Spend, Items Purchased, Average Rating, Days Since Last Purchase)", type=["csv"])
+            
+            if uploaded_file is not None:
+                batch_df = pd.read_csv(uploaded_file)
+                req_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
+                
+                if all(c in batch_df.columns for c in req_cols):
+                    b_scaled = scaler.transform(batch_df[req_cols])
+                    b_preds = model.predict(b_scaled)
+                    batch_df["Predicted_Cluster_ID"] = b_preds
+                    batch_df["Predicted_Segment"] = [segment_names.get(c, f"Cluster {c}") for c in b_preds]
+
+                    st.success(f"Successfully processed {len(batch_df):,} customer records!")
+                    st.dataframe(batch_df.head(10), use_container_width=True)
+
+                    csv_out = batch_df.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="📥 DOWNLOAD ENRICHED CLASSIFICATIONS CSV",
+                        data=csv_out,
+                        file_name="neural_batch_classified.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
                 else:
-                    st.info("📈 EXPANSION & GROWTH VECTOR")
-                    st.markdown("""
-                    * **Cross-Sell Stream:** Surface algorithmic product associations based on prior carts.
-                    * **Cadence Optimization:** Implement recurring loyalty rewards.
-                    """)
+                    st.error(f"Missing required columns! File must include: `{req_cols}`")
 
     # ----------------- VIEW 2: QUANTUM DASHBOARD -----------------
     elif page == "📊 Quantum Dashboard":
@@ -286,7 +445,6 @@ else:
         try:
             df = load_and_process_data()
 
-            # 1. 6-Column High-Density Futuristic Metric HUD
             m1, m2, m3, m4, m5, m6 = st.columns(6)
             with m1:
                 st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">TOTAL NODES</div><div class="hud-metric-value">{len(df):,}</div></div>""", unsafe_allow_html=True)
@@ -306,7 +464,6 @@ else:
 
             st.write("")
 
-            # 2. 3D Spatial Vector Clustering Visualizer
             st.subheader("🌐 3D Spatial Vector Clustering")
             fig_3d = px.scatter_3d(
                 df,
@@ -333,7 +490,6 @@ else:
 
             st.divider()
 
-            # 3. Macro Financials & Composition
             c_left, c_right = st.columns(2)
             with c_left:
                 st.subheader("🧬 Cohort Revenue vs Node Count")
@@ -386,7 +542,6 @@ else:
 
             st.divider()
 
-            # 4. Behavioral Density & Radar Comparison
             col_b1, col_b2 = st.columns(2)
             with col_b1:
                 st.subheader("💎 Spend vs Recency Density Contours")
@@ -436,7 +591,6 @@ else:
 
             st.divider()
 
-            # 5. Cohort Benchmark Matrix
             st.subheader("📋 Cohort Benchmark Breakdown")
             benchmark_table = df.groupby("Segment").agg(
                 Nodes=("Total Spend", "count"),
@@ -479,7 +633,6 @@ else:
         try:
             df = load_explorer_data()
 
-            # Dynamic Filtering Grid
             f1, f2, f3 = st.columns([1.5, 2, 2])
             with f1:
                 available_segments = ["All Clusters"] + sorted(list(df["Segment"].dropna().unique())) if "Segment" in df.columns else ["All Clusters"]
@@ -527,7 +680,6 @@ else:
 
             st.divider()
 
-            # Isolated Node Telemetry
             st.subheader("🔬 Single Node Telemetry")
             if not filtered_df.empty:
                 selected_idx = st.selectbox(
