@@ -3,71 +3,97 @@ import pandas as pd
 import numpy as np
 import joblib
 import plotly.express as px
+import plotly.graph_objects as go
 
 # Page configuration
 st.set_page_config(
-    page_title="E-Commerce Customer Intelligence",
-    page_icon="🛍️",
+    page_title="NEURAL METRICS // Customer Intelligence",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling for polished UI & Login Card
+# Custom Styling: Cyberpunk Glassmorphism & Neon HUD
 st.markdown("""
 <style>
-    /* Google SSO Button Styling */
-    .google-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.55rem;
-        border-radius: 8px;
-        background-color: #ffffff;
-        color: #3c4043;
-        font-weight: 500;
-        font-size: 0.95rem;
-        border: 1px solid #dadce0;
-        cursor: pointer;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+    /* Global Dark Theme Settings */
+    .stApp {
+        background: radial-gradient(circle at 10% 20%, #0d1117 0%, #05070a 90%);
+        color: #e6edf3;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+    /* Headings & Cyberpunk Typography */
+    h1, h2, h3, .hero-title {
+        font-family: 'Orbitron', monospace !important;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #00f2fe 0%, #4facfe 50%, #00ff87 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Glowing HUD Cards */
+    .hud-card {
+        background: rgba(13, 17, 23, 0.7);
+        border: 1px solid rgba(0, 242, 254, 0.2);
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.08), inset 0 0 15px rgba(0, 242, 254, 0.03);
+        border-radius: 12px;
+        padding: 1.2rem;
+        backdrop-filter: blur(10px);
         margin-bottom: 1rem;
+        transition: border 0.3s ease, box-shadow 0.3s ease;
     }
-    .google-btn:hover {
-        background-color: #f8f9fa;
-        box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+    .hud-card:hover {
+        border: 1px solid rgba(0, 255, 135, 0.5);
+        box-shadow: 0 0 20px rgba(0, 255, 135, 0.2);
     }
-    .google-icon {
-        width: 18px;
-        height: 18px;
-        margin-right: 10px;
+
+    .hud-metric-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #8b949e;
     }
-    
-    /* Login Form Divider */
-    .auth-separator {
+    .hud-metric-value {
+        font-family: 'Orbitron', monospace;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #00f2fe;
+        margin-top: 0.2rem;
+        text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+    }
+
+    /* Cyberpunk Divider */
+    .cyber-separator {
         display: flex;
         align-items: center;
         text-align: center;
-        margin: 1.2rem 0;
-        color: #888;
-        font-size: 0.85rem;
+        margin: 1.5rem 0;
+        color: #00f2fe;
+        font-family: 'Orbitron', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 2px;
     }
-    .auth-separator::before,
-    .auth-separator::after {
+    .cyber-separator::before, .cyber-separator::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        border-bottom: 1px solid rgba(0, 242, 254, 0.25);
     }
-    .auth-separator:not(:empty)::before {
-        margin-right: .5em;
-    }
-    .auth-separator:not(:empty)::after {
-        margin-left: .5em;
+    .cyber-separator:not(:empty)::before { margin-right: 1em; }
+    .cyber-separator:not(:empty)::after { margin-left: 1em; }
+
+    /* Custom Streamlit Metric & Widget Tweaks */
+    div[data-testid="stMetricValue"] {
+        font-family: 'Orbitron', monospace;
+        color: #00ff87 !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ----------------- AUTHENTICATION -----------------
-# Initialize user credentials in session state to allow runtime registration
 if "user_credentials" not in st.session_state:
     st.session_state["user_credentials"] = {
         "RehanRathod2513": "ikra@786",
@@ -79,30 +105,26 @@ if "authenticated" not in st.session_state:
     st.session_state["username"] = ""
 
 def login():
-    col1, col2, col3 = st.columns([1, 1.8, 1])
+    _, col2, _ = st.columns([1, 1.8, 1])
     with col2:
-        st.markdown("<h2 style='text-align: center;'>🛍️ Customer Intelligence Portal</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #888;'>Secure access for ML insights and segmentation</p>", unsafe_allow_html=True)
-        st.write("")
+        st.markdown("<h2 style='text-align: center;'>⚡ NEURAL METRICS</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #00f2fe; letter-spacing: 1px;'>// QUANTUM CUSTOMER CLASSIFICATION SUITE</p>", unsafe_allow_html=True)
         
         with st.container(border=True):
-            # Google Sign In Trigger Button
-            if st.button("🌐 Continue with Google", use_container_width=True):
+            if st.button("🌐 Connect via SSO Matrix", use_container_width=True):
                 st.session_state["authenticated"] = True
-                st.session_state["username"] = "Google User"
+                st.session_state["username"] = "Matrix_Agent"
                 st.rerun()
 
-            st.markdown('<div class="auth-separator">OR CONTINUE WITH PASSWORD</div>', unsafe_allow_html=True)
+            st.markdown('<div class="cyber-separator">SECURE PROTOCOL ACCESS</div>', unsafe_allow_html=True)
 
-            # Tab interface for Sign In vs Sign Up
-            tab_signin, tab_signup = st.tabs(["🔑 Sign In", "📝 Sign Up"])
+            tab_signin, tab_signup = st.tabs(["🔑 DECRYPT / LOGIN", "📝 REGISTER NODE"])
 
-            # --- SIGN IN TAB ---
             with tab_signin:
                 with st.form("login_form"):
-                    username = st.text_input("Username", placeholder="e.g. admin")
-                    password = st.text_input("Password", type="password", placeholder="••••••••")
-                    submit = st.form_submit_button("Sign In", use_container_width=True)
+                    username = st.text_input("Identity Handle", placeholder="e.g. admin")
+                    password = st.text_input("Access Cipher", type="password", placeholder="••••••••")
+                    submit = st.form_submit_button("AUTHENTICATE SYSTEM", use_container_width=True)
                     
                     if submit:
                         credentials = st.session_state["user_credentials"]
@@ -111,31 +133,30 @@ def login():
                             st.session_state["username"] = username
                             st.rerun()
                         else:
-                            st.error("Invalid credentials. Please try again.")
+                            st.error("ACCESS DENIED: Invalid Cipher Signature")
 
-            # --- SIGN UP TAB ---
             with tab_signup:
                 with st.form("signup_form"):
-                    new_user = st.text_input("Choose Username", placeholder="e.g. newuser")
-                    new_pass = st.text_input("Choose Password", type="password", placeholder="••••••••")
-                    confirm_pass = st.text_input("Confirm Password", type="password", placeholder="••••••••")
-                    signup_submit = st.form_submit_button("Create Account", use_container_width=True)
+                    new_user = st.text_input("Assign Identity Handle", placeholder="e.g. agent_01")
+                    new_pass = st.text_input("Set Access Cipher", type="password", placeholder="••••••••")
+                    confirm_pass = st.text_input("Confirm Access Cipher", type="password", placeholder="••••••••")
+                    signup_submit = st.form_submit_button("REGISTER CREDENTIALS", use_container_width=True)
 
                     if signup_submit:
                         clean_user = new_user.strip()
                         credentials = st.session_state["user_credentials"]
                         
                         if not clean_user or not new_pass:
-                            st.warning("Please fill in all fields.")
+                            st.warning("All data vectors required.")
                         elif clean_user in credentials:
-                            st.error("Username already exists. Please choose another.")
+                            st.error("Handle collision: Identity already in registry.")
                         elif new_pass != confirm_pass:
-                            st.error("Passwords do not match.")
+                            st.error("Cipher checksum mismatch.")
                         elif len(new_pass) < 6:
-                            st.warning("Password must be at least 6 characters.")
+                            st.warning("Cipher complexity must exceed 5 bytes.")
                         else:
                             st.session_state["user_credentials"][clean_user] = new_pass
-                            st.success("Account created successfully! You can now switch to the 'Sign In' tab.")
+                            st.success("Identity node registered. Proceed to Decrypt.")
 
 def logout():
     st.session_state["authenticated"] = False
@@ -146,21 +167,20 @@ def logout():
 if not st.session_state["authenticated"]:
     login()
 else:
-    # Sidebar Navigation & User Info
     with st.sidebar:
-        st.markdown(f"👤 **Logged in as:** `{st.session_state['username']}`")
-        if st.button("Log Out", use_container_width=True):
+        st.markdown(f"🟢 **OPERATOR:** `{st.session_state['username']}`")
+        st.markdown("<p style='font-size:0.75rem; color:#00ff87;'>NODE STATUS: SYNCHRONIZED</p>", unsafe_allow_html=True)
+        if st.button("TERMINATE SESSION", use_container_width=True):
             logout()
         st.divider()
         
-        st.subheader("Navigation")
+        st.markdown("<p style='letter-spacing:2px; font-size:0.8rem; color:#8b949e;'>CORE MODULES</p>", unsafe_allow_html=True)
         page = st.radio(
-            "Go to",
-            ["Customer Segment Predictor", "Dashboard", "Customer Explorer"],
+            "Navigation",
+            ["⚡ Neural Segment Predictor", "📊 Quantum Dashboard", "🔍 Cyber Customer Explorer"],
             label_visibility="collapsed"
         )
 
-    # Load artifacts (cache for performance)
     @st.cache_resource
     def load_artifacts():
         model = joblib.load("customer_segmentation_model.pkl")
@@ -170,113 +190,92 @@ else:
 
     model, scaler, segment_names = load_artifacts()
 
-    # View 1: Customer Segment Predictor
-    if page == "Customer Segment Predictor":
-        st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
-        st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
+    # ----------------- VIEW 1: PREDICTOR -----------------
+    if page == "⚡ Neural Segment Predictor":
+        st.markdown('<h1>// NEURAL SEGMENT CLASSIFIER</h1>', unsafe_allow_html=True)
+        st.caption("Live high-dimensional behavioral clustering engine via calibrated K-Means architecture.")
         st.divider()
 
-        # Input Layout
         c1, c2 = st.columns(2)
         with c1:
-            total_spend = st.number_input("Total Spend ($)", min_value=0.0, value=1000.0, step=50.0)
-            items_purchased = st.number_input("Items Purchased", min_value=1, value=10, step=1)
-            
+            total_spend = st.number_input("Total Lifetime Value ($)", min_value=0.0, value=1250.0, step=50.0)
+            items_purchased = st.number_input("Purchased Volume Units", min_value=1, value=12, step=1)
         with c2:
-            avg_rating = st.slider("Average Rating", min_value=1.0, max_value=5.0, value=4.0, step=0.1)
-            recency = st.number_input("Days Since Last Purchase", min_value=0, value=20, step=1)
+            avg_rating = st.slider("Sentiment Rating Index", min_value=1.0, max_value=5.0, value=4.2, step=0.1)
+            recency = st.number_input("Temporal Recency (Days Inactive)", min_value=0, value=14, step=1)
 
-        predict_btn = st.button("🚀 Predict Customer Segment", type="primary", use_container_width=True)
+        predict_btn = st.button("EXECUTE NEURAL INFERENCE", type="primary", use_container_width=True)
 
         if predict_btn:
-            # Model inference
             input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
             scaled_features = scaler.transform(input_data)
             cluster_id = model.predict(scaled_features)[0]
-            cluster_label = segment_names.get(cluster_id, f"Cluster {cluster_id}")
+            cluster_label = segment_names.get(cluster_id, f"Cluster #{cluster_id}")
 
             st.write("")
-            
-            # Interactive Tab Interface
-            tab_overview, tab_benchmarks, tab_playbook = st.tabs([
-                "🎯 Segment Overview", 
-                "📊 Feature Radar & Benchmarks", 
-                "💡 Actionable Marketing Playbook"
-            ])
+            st.markdown(f"""
+            <div class="hud-card" style="border-left: 4px solid #00ff87;">
+                <div class="hud-metric-label">IDENTIFIED BEHAVIORAL MATRIX</div>
+                <div class="hud-metric-value" style="color: #00ff87;">{cluster_label}</div>
+                <p style="color: #8b949e; margin-top: 0.5rem; font-size: 0.9rem;">Cluster Vector ID: <span style="color:#00f2fe;">0x0{cluster_id}</span> | Confidence Status: OPTIMAL</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-            # Tab 1: Overview
-            with tab_overview:
-                st.markdown(f"""
-                <div class="result-card">
-                    <span style="color: #aaa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Classification Result</span>
-                    <h2 style="margin: 0.4rem 0; color: #00D26A;">{cluster_label}</h2>
-                    <p style="margin: 0; color: #ddd; font-size: 0.95rem;">Assigned Cluster ID: <b>#{cluster_id}</b></p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.write("")
-                m1, m2, m3, m4 = st.columns(4)
-                m1.metric("Spend Profile", f"${total_spend:,.2f}")
-                m2.metric("Basket Volume", f"{int(items_purchased)} items")
-                m3.metric("Engagement Rating", f"{avg_rating:.1f} / 5.0")
-                m4.metric("Activity Recency", f"{int(recency)} days ago")
+            tab_radar, tab_strategy = st.tabs(["📡 RADAR PROFILE", "💾 DIRECTIVE ACTION PLAN"])
 
-            # Tab 2: Feature Radar & Benchmarks
-            with tab_benchmarks:
-                st.markdown("#### Customer Metric Profile")
-                
-                categories = ['Spend Intensity', 'Basket Size', 'Satisfaction', 'Recency Score']
+            with tab_radar:
+                categories = ['Spend Density', 'Basket Volume', 'Sentiment Index', 'Engagement Velocity']
                 spend_score = min(100, (total_spend / 2500.0) * 100)
                 basket_score = min(100, (items_purchased / 25.0) * 100)
                 rating_score = (avg_rating / 5.0) * 100
                 recency_score = max(0, 100 - (recency / 90.0 * 100))
-
                 values = [spend_score, basket_score, rating_score, recency_score]
 
-                fig_radar = px.line_polar(
+                fig_radar = go.Figure()
+                fig_radar.add_trace(go.Scatterpolar(
                     r=values + [values[0]],
                     theta=categories + [categories[0]],
-                    line_close=True,
-                    template="plotly_dark"
-                )
-                fig_radar.update_traces(fill='toself', fillcolor='rgba(255, 75, 75, 0.3)', line_color='#FF4B4B')
+                    fill='toself',
+                    fillcolor='rgba(0, 242, 254, 0.25)',
+                    line=dict(color='#00f2fe', width=2),
+                    name='Customer Profile'
+                ))
                 fig_radar.update_layout(
-                    polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                    polar=dict(
+                        radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.1)"),
+                        angularaxis=dict(gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(0, 242, 254, 0.5)")
+                    ),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
                     showlegend=False,
-                    margin=dict(t=20, b=20, l=40, r=40)
+                    font=dict(color="#00f2fe", family="Rajdhani")
                 )
                 st.plotly_chart(fig_radar, use_container_width=True)
 
-            # Tab 3: Actionable Marketing Playbook
-            with tab_playbook:
-                st.markdown(f"#### Recommended Strategies for **{cluster_label}**")
-                
+            with tab_strategy:
                 if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
-                    st.success("🌟 **Priority VIP Customer**")
+                    st.success("🌟 PRIORITY HIGH-CAPITAL NODE")
                     st.markdown("""
-                    * **Retention:** Assign priority customer support and early beta access to product drops.
-                    * **Upselling:** Offer bespoke premium bundles and loyalty tier upgrades.
-                    * **Engagement:** Send personalized executive check-ins and exclusive discount codes.
+                    * **Direct Protocol:** Provision exclusive concierge support channel.
+                    * **Upsell Vector:** Dispatch automated alpha access to upcoming catalog releases.
                     """)
                 elif recency > 45:
-                    st.warning("⚠️ **At-Risk / Churn Alert**")
+                    st.error("⚠️ HIGH-LATENCY AT-RISK NODE")
                     st.markdown("""
-                    * **Re-engagement Campaign:** Trigger automated *"We miss you"* email workflows with a 15% discount.
-                    * **Feedback Loop:** Send a 1-question NPS survey to diagnose churn drivers.
-                    * **Remarketing:** Enroll this segment in tailored Facebook/Google retargeting ads.
+                    * **Re-engagement Trigger:** Deploy targeted reactivation incentives.
+                    * **Telemetry Diagnostic:** Dispatch 1-click sentiment diagnostic workflow.
                     """)
                 else:
-                    st.info("📈 **Growth & Nurturing Cohort**")
+                    st.info("📈 EXPANSION & GROWTH VECTOR")
                     st.markdown("""
-                    * **Cross-Selling:** Recommend complementary items based on previous purchase history.
-                    * **Frequency Boost:** Introduce time-limited free shipping thresholds on orders over $50.
-                    * **Social Proof:** Invite them to leave reviews in exchange for rewards points.
+                    * **Cross-Sell Stream:** Surface algorithmic product associations based on prior carts.
+                    * **Cadence Optimization:** Implement recurring loyalty rewards.
                     """)
 
-    # View 2: Dashboard
-    elif page == "Dashboard":
-        st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
-        st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
+    # ----------------- VIEW 2: QUANTUM DASHBOARD -----------------
+    elif page == "📊 Quantum Dashboard":
+        st.markdown('<h1>// QUANTUM TELEMETRY DASHBOARD</h1>', unsafe_allow_html=True)
+        st.caption("Live spatial clustering and macro segment distributions.")
         st.divider()
 
         @st.cache_data
@@ -292,93 +291,83 @@ else:
         try:
             df = load_and_process_data()
 
-            # KPI Summary Metrics
-            kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-            with kpi1:
-                st.metric("Total Customers", f"{len(df):,}")
-            with kpi2:
-                st.metric("Avg. Total Spend", f"${df['Total Spend'].mean():,.2f}")
-            with kpi3:
-                st.metric("Avg. Rating", f"{df['Average Rating'].mean():.2f} / 5.0")
-            with kpi4:
-                st.metric("Avg. Recency", f"{df['Days Since Last Purchase'].mean():.1f} days")
+            # Futuristic Metric HUD
+            m1, m2, m3, m4 = st.columns(4)
+            with m1:
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">TOTAL MONITORED NODES</div><div class="hud-metric-value">{len(df):,}</div></div>""", unsafe_allow_html=True)
+            with m2:
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">MEAN REVENUE YIELD</div><div class="hud-metric-value">${df['Total Spend'].mean():,.2f}</div></div>""", unsafe_allow_html=True)
+            with m3:
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">GLOBAL SENTIMENT</div><div class="hud-metric-value">{df['Average Rating'].mean():.2f} ★</div></div>""", unsafe_allow_html=True)
+            with m4:
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">MEAN INACTIVITY CYCLE</div><div class="hud-metric-value">{df['Days Since Last Purchase'].mean():.1f}d</div></div>""", unsafe_allow_html=True)
 
             st.write("")
+
+            # 3D Cluster Visualizer
+            st.subheader("🌐 3D Spatial Vector Clustering")
+            fig_3d = px.scatter_3d(
+                df,
+                x='Total Spend',
+                y='Items Purchased',
+                z='Days Since Last Purchase',
+                color='Segment',
+                size='Average Rating',
+                color_discrete_sequence=['#00f2fe', '#00ff87', '#ff007f', '#ffe600', '#7928ca'],
+                template="plotly_dark",
+                opacity=0.85
+            )
+            fig_3d.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(t=10, b=10, l=10, r=10),
+                scene=dict(
+                    xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)"),
+                    yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)"),
+                    zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)")
+                )
+            )
+            st.plotly_chart(fig_3d, use_container_width=True)
+
             st.divider()
 
-            # Row 1: Segment Breakdown & Scatter Analysis
-            col_chart1, col_chart2 = st.columns([1, 1.3])
-
-            with col_chart1:
-                st.subheader("👥 Customer Segment Breakdown")
-                segment_counts = df["Segment"].value_counts().reset_index()
-                segment_counts.columns = ["Segment", "Count"]
-                
-                fig_pie = px.pie(
-                    segment_counts,
+            # Breakdown Charts
+            c_left, c_right = st.columns(2)
+            with c_left:
+                st.subheader("🧬 Cohort Composition")
+                seg_counts = df["Segment"].value_counts().reset_index()
+                seg_counts.columns = ["Segment", "Count"]
+                fig_donut = px.pie(
+                    seg_counts,
                     names="Segment",
                     values="Count",
-                    hole=0.45,
-                    color_discrete_sequence=px.colors.qualitative.Pastel
+                    hole=0.6,
+                    color_discrete_sequence=['#00f2fe', '#00ff87', '#ff007f', '#ffe600', '#7928ca'],
+                    template="plotly_dark"
                 )
-                fig_pie.update_layout(
-                    margin=dict(t=20, b=20, l=10, r=10),
-                    legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
-                )
-                st.plotly_chart(fig_pie, use_container_width=True)
+                fig_donut.update_layout(paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
+                st.plotly_chart(fig_donut, use_container_width=True)
 
-            with col_chart2:
-                st.subheader("💰 Spend vs. Items Purchased")
-                fig_scatter = px.scatter(
-                    df,
-                    x="Items Purchased",
-                    y="Total Spend",
-                    color="Segment",
-                    size="Average Rating",
-                    hover_data=["Days Since Last Purchase"],
-                    template="plotly_dark",
-                    opacity=0.8
-                )
-                fig_scatter.update_layout(margin=dict(t=20, b=20, l=10, r=10))
-                st.plotly_chart(fig_scatter, use_container_width=True)
-
-            st.divider()
-
-            # Row 2: Recency and Rating Distributions
-            col_chart3, col_chart4 = st.columns(2)
-
-            with col_chart3:
-                st.subheader("⏳ Recency Distribution (Days)")
-                fig_hist = px.histogram(
+            with c_right:
+                st.subheader("⚡ Temporal Inactivity Density")
+                fig_density = px.histogram(
                     df,
                     x="Days Since Last Purchase",
-                    nbins=25,
-                    marginal="box",
-                    color_discrete_sequence=["#FF8F6B"],
+                    nbins=30,
+                    marginal="rug",
+                    color_discrete_sequence=["#00f2fe"],
                     template="plotly_dark"
                 )
-                fig_hist.update_layout(margin=dict(t=20, b=20, l=10, r=10), yaxis_title="Customer Count")
-                st.plotly_chart(fig_hist, use_container_width=True)
-
-            with col_chart4:
-                st.subheader("⭐ Average Rating Distribution")
-                fig_rating = px.histogram(
-                    df,
-                    x="Average Rating",
-                    nbins=20,
-                    color_discrete_sequence=["#00D26A"],
-                    template="plotly_dark"
-                )
-                fig_rating.update_layout(margin=dict(t=20, b=20, l=10, r=10), yaxis_title="Customer Count")
-                st.plotly_chart(fig_rating, use_container_width=True)
+                fig_density.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
+                st.plotly_chart(fig_density, use_container_width=True)
 
         except FileNotFoundError:
-            st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
+            st.error("`customer_intelligence_data.csv` was not found.")
 
-    # View 3: Customer Explorer
-    elif page == "Customer Explorer":
-        st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
-        st.caption("Search, filter, and inspect detailed behavioral profiles and segment classifications.")
+    # ----------------- VIEW 3: CYBER EXPLORER -----------------
+    elif page == "🔍 Cyber Customer Explorer":
+        st.markdown('<h1>// CYBER NODE EXPLORER</h1>', unsafe_allow_html=True)
+        st.caption("Deep memory inspection and vector slicing across raw client records.")
         st.divider()
 
         @st.cache_data
@@ -394,33 +383,28 @@ else:
         try:
             df = load_explorer_data()
 
-            # Filter Controls
-            st.markdown("### 🔍 Filters & Search")
+            # Dynamic Filtering Grid
             f1, f2, f3 = st.columns([1.5, 2, 2])
-
             with f1:
-                available_segments = ["All"] + sorted(list(df["Segment"].dropna().unique())) if "Segment" in df.columns else ["All"]
-                selected_segment = st.selectbox("Customer Segment", available_segments)
-
+                available_segments = ["All Clusters"] + sorted(list(df["Segment"].dropna().unique())) if "Segment" in df.columns else ["All Clusters"]
+                selected_segment = st.selectbox("Isolate Cluster Subspace", available_segments)
             with f2:
                 spend_range = st.slider(
-                    "Total Spend ($)",
+                    "Spend Bandwidth ($)",
                     min_value=float(df["Total Spend"].min()),
                     max_value=float(df["Total Spend"].max()),
                     value=(float(df["Total Spend"].min()), float(df["Total Spend"].max())),
-                    step=25.0
+                    step=50.0
                 )
-
             with f3:
                 min_rating, max_rating = st.slider(
-                    "Average Rating",
+                    "Sentiment Bounds",
                     min_value=1.0,
                     max_value=5.0,
                     value=(1.0, 5.0),
                     step=0.1
                 )
 
-            # Apply filters
             filtered_df = df[
                 (df["Total Spend"] >= spend_range[0]) & 
                 (df["Total Spend"] <= spend_range[1]) &
@@ -428,62 +412,43 @@ else:
                 (df["Average Rating"] <= max_rating)
             ]
 
-            if selected_segment != "All" and "Segment" in df.columns:
+            if selected_segment != "All Clusters" and "Segment" in df.columns:
                 filtered_df = filtered_df[filtered_df["Segment"] == selected_segment]
 
-            # Results & Export Bar
-            r_col1, r_col2 = st.columns([3, 1])
-            with r_col1:
-                st.markdown(f"**Showing {len(filtered_df):,} of {len(df):,} total customers**")
-            with r_col2:
-                csv_data = filtered_df.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="📥 Download Filtered CSV",
-                    data=csv_data,
-                    file_name="filtered_customer_data.csv",
-                    mime="text/csv",
-                    use_container_width=True
-                )
+            st.markdown(f"**FILTER ACTIVE:** Sliced **{len(filtered_df):,}** of **{len(df):,}** node vectors.")
 
-            # Interactive Data Table
             st.dataframe(
                 filtered_df,
                 use_container_width=True,
-                height=320,
+                height=300,
                 column_config={
                     "Total Spend": st.column_config.NumberColumn("Total Spend", format="$%.2f"),
-                    "Average Rating": st.column_config.NumberColumn("Rating", format="%.2f ⭐"),
-                    "Items Purchased": st.column_config.NumberColumn("Items Purchased", format="%d 📦"),
-                    "Days Since Last Purchase": st.column_config.NumberColumn("Recency", format="%d days")
+                    "Average Rating": st.column_config.NumberColumn("Rating", format="%.2f ★"),
+                    "Items Purchased": st.column_config.NumberColumn("Items Purchased", format="%d units"),
+                    "Days Since Last Purchase": st.column_config.NumberColumn("Recency", format="%d d")
                 }
             )
 
             st.divider()
 
-            # Single Customer Deep Dive
-            st.subheader("👤 Individual Customer Deep-Dive")
+            # Isolated Node Telemetry
+            st.subheader("🔬 Single Node Telemetry")
             if not filtered_df.empty:
                 selected_idx = st.selectbox(
-                    "Select Customer Record (Row Index)",
+                    "Select Vector Memory Address",
                     options=filtered_df.index,
-                    format_func=lambda x: f"Customer #{x} - {filtered_df.loc[x, 'Segment'] if 'Segment' in filtered_df.columns else ''} (${filtered_df.loc[x, 'Total Spend']:,.2f})"
+                    format_func=lambda x: f"Node #{x:04d} | {filtered_df.loc[x, 'Segment']} (${filtered_df.loc[x, 'Total Spend']:,.2f})"
                 )
+                node = filtered_df.loc[selected_idx]
 
-                selected_customer = filtered_df.loc[selected_idx]
-
-                c_metric1, c_metric2, c_metric3, c_metric4, c_metric5 = st.columns(5)
-                with c_metric1:
-                    st.metric("Total Spend", f"${selected_customer['Total Spend']:,.2f}")
-                with c_metric2:
-                    st.metric("Items Purchased", f"{int(selected_customer['Items Purchased'])}")
-                with c_metric3:
-                    st.metric("Avg Rating", f"{selected_customer['Average Rating']:.2f} ⭐")
-                with c_metric4:
-                    st.metric("Recency", f"{int(selected_customer['Days Since Last Purchase'])} days")
-                with c_metric5:
-                    st.metric("Assigned Cohort", f"{selected_customer.get('Segment', 'N/A')}")
+                n1, n2, n3, n4, n5 = st.columns(5)
+                n1.metric("Lifetime Yield", f"${node['Total Spend']:,.2f}")
+                n2.metric("Basket Volume", f"{int(node['Items Purchased'])} units")
+                n3.metric("Sentiment Score", f"{node['Average Rating']:.2f} ★")
+                n4.metric("Cycle Latency", f"{int(node['Days Since Last Purchase'])} days")
+                n5.metric("Segment Vector", f"{node.get('Segment', 'N/A')}")
             else:
-                st.warning("No customer records match the current filter criteria.")
+                st.warning("No node vectors match the active filter bandwidth.")
 
         except FileNotFoundError:
-            st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
+            st.error("`customer_intelligence_data.csv` was not found.")
