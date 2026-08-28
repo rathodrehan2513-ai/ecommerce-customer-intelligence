@@ -1,119 +1,148 @@
-
 import streamlit as st
 import pandas as pd
+import numpy as np
 import joblib
-import plotly.express as px
 
+# Page configuration
 st.set_page_config(
-    page_title="Customer Intelligence Platform",
+    page_title="E-Commerce Customer Intelligence",
     page_icon="🛍️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-@st.cache_data
-def load_data():
-    return pd.read_csv("customer_intelligence_data.csv")
+# Custom Styling for polished UI & Login Card
+st.markdown("""
+<style>
+    /* Gradient accent glow for headers */
+    .hero-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #FF4B4B, #FF8F6B);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.2rem;
+    }
+    
+    /* Segment result card */
+    .result-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: rgba(38, 39, 48, 0.6);
+        border-left: 5px solid #00D26A;
+        margin-top: 1.2rem;
+    }
+    
+    /* Login card container */
+    [data-testid="stForm"] {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+    }
+</style>
+""", unsafe_allow_html=True)
 
-@st.cache_resource
-def load_model_files():
-    model = joblib.load("customer_segmentation_model.pkl")
-    scaler = joblib.load("customer_scaler.pkl")
-    labels = joblib.load("segment_names.pkl")
-    return model, scaler, labels
+# ----------------- AUTHENTICATION -----------------
+USER_CREDENTIALS = {
+    "admin": "intel2026",
+    "analyst": "growth123"
+}
 
-df = load_data()
-kmeans, scaler, segment_names = load_model_files()
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = ""
 
-st.title("🛍️ E-Commerce Customer Intelligence Platform")
-st.caption("Machine-learning customer segmentation and business analytics")
-
-page = st.sidebar.radio(
-    "Navigation",
-    ["Dashboard", "Customer Segment Predictor", "Customer Explorer"]
-)
-
-if page == "Dashboard":
-    total_customers = len(df)
-    total_spend = df["Total Spend"].sum()
-    average_spend = df["Total Spend"].mean()
-    vip_customers = (df["Customer Segment"] == "VIP Customers").sum()
-
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total Customers", f"{total_customers:,}")
-    col2.metric("Recorded Customer Spend", f"${total_spend:,.0f}")
-    col3.metric("Average Customer Spend", f"${average_spend:,.2f}")
-    col4.metric("VIP Customers", f"{vip_customers:,}")
-
-    st.subheader("Customer Segment Distribution")
-    segment_counts = df["Customer Segment"].value_counts().reset_index()
-    segment_counts.columns = ["Customer Segment", "Customers"]
-
-    chart1 = px.bar(
-        segment_counts,
-        x="Customer Segment",
-        y="Customers",
-        color="Customer Segment",
-        text="Customers"
-    )
-    st.plotly_chart(chart1, use_container_width=True)
-
-    st.subheader("Spending vs Purchase Recency")
-    chart2 = px.scatter(
-        df,
-        x="Total Spend",
-        y="Days Since Last Purchase",
-        color="Customer Segment",
-        size="Items Purchased",
-        hover_data=["Customer ID", "Membership Type", "Average Rating"],
-        title="Customer Behaviour Segments"
-    )
-    st.plotly_chart(chart2, use_container_width=True)
-
-elif page == "Customer Segment Predictor":
-    st.subheader("Predict a Customer Segment")
-    st.write("Enter customer behaviour details to classify the customer with K-Means.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        total_spend = st.number_input("Total Spend", min_value=0.0, value=1000.0)
-        items_purchased = st.number_input("Items Purchased", min_value=0, value=10)
-
+def login():
+    col1, col2, col3 = st.columns([1, 1.8, 1])
     with col2:
-        average_rating = st.slider("Average Rating", 1.0, 5.0, 4.0, 0.1)
-        days_since_purchase = st.number_input(
-            "Days Since Last Purchase",
-            min_value=0,
-            value=20
+        st.markdown("<h2 style='text-align: center;'>🛍️ Customer Intelligence Portal</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #888;'>Secure access for ML insights and segmentation</p>", unsafe_allow_html=True)
+        st.write("")
+        
+        with st.form("login_form"):
+            username = st.text_input("Username", placeholder="e.g. admin")
+            password = st.text_input("Password", type="password", placeholder="••••••••")
+            submit = st.form_submit_button("Sign In", use_container_width=True)
+            
+            if submit:
+                if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+                    st.session_state["authenticated"] = True
+                    st.session_state["username"] = username
+                    st.rerun()
+                else:
+                    st.error("Invalid credentials. Please try again.")
+
+def logout():
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = ""
+    st.rerun()
+
+# ----------------- MAIN APPLICATION -----------------
+if not st.session_state["authenticated"]:
+    login()
+else:
+    # Sidebar Navigation & User Info
+    with st.sidebar:
+        st.markdown(f"👤 **Logged in as:** `{st.session_state['username']}`")
+        if st.button("Log Out", use_container_width=True):
+            logout()
+        st.divider()
+        
+        st.subheader("Navigation")
+        page = st.radio(
+            "Go to",
+            ["Customer Segment Predictor", "Dashboard", "Customer Explorer"],
+            label_visibility="collapsed"
         )
 
-    if st.button("Predict Customer Segment", type="primary"):
-        customer = pd.DataFrame([{
-            "Total Spend": total_spend,
-            "Items Purchased": items_purchased,
-            "Average Rating": average_rating,
-            "Days Since Last Purchase": days_since_purchase
-        }])
+    # Load artifacts (cache for performance)
+    @st.cache_resource
+    def load_artifacts():
+        model = joblib.load("customer_segmentation_model.pkl")
+        scaler = joblib.load("customer_scaler.pkl")
+        segment_names = joblib.load("segment_names.pkl")
+        return model, scaler, segment_names
 
-        scaled_customer = scaler.transform(customer)
-        cluster = kmeans.predict(scaled_customer)[0]
-        predicted_segment = segment_names[cluster]
+    model, scaler, segment_names = load_artifacts()
 
-        st.success(f"Predicted Segment: {predicted_segment}")
+    # View 1: Customer Segment Predictor
+    if page == "Customer Segment Predictor":
+        st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
+        st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
+        st.divider()
 
-elif page == "Customer Explorer":
-    st.subheader("Explore Customers")
+        # Inputs in responsive columns
+        c1, c2 = st.columns(2)
+        with c1:
+            total_spend = st.number_input("Total Spend ($)", min_value=0.0, value=1000.0, step=50.0)
+            items_purchased = st.number_input("Items Purchased", min_value=1, value=10, step=1)
+            
+        with c2:
+            avg_rating = st.slider("Average Rating", min_value=1.0, max_value=5.0, value=4.0, step=0.1)
+            recency = st.number_input("Days Since Last Purchase", min_value=0, value=20, step=1)
 
-    selected_segment = st.selectbox(
-        "Filter by customer segment",
-        ["All"] + sorted(df["Customer Segment"].unique().tolist())
-    )
+        if st.button("Predict Segment", type="primary", use_container_width=True):
+            # Scale & Predict
+            input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
+            scaled_features = scaler.transform(input_data)
+            cluster_id = model.predict(scaled_features)[0]
+            cluster_label = segment_names.get(cluster_id, f"Cluster {cluster_id}")
 
-    filtered_df = df.copy()
+            # Highlighted result card
+            st.markdown(f"""
+            <div class="result-card">
+                <span style="color: #888; font-size: 0.9rem;">Prediction Output</span>
+                <h3 style="margin: 0.3rem 0; color: #00D26A;">🎯 {cluster_label}</h3>
+                <p style="margin: 0; color: #ccc; font-size: 0.85rem;">Cluster ID: #{cluster_id} | High affinity to repeat engagement campaigns.</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    if selected_segment != "All":
-        filtered_df = filtered_df[
-            filtered_df["Customer Segment"] == selected_segment
-        ]
+    elif page == "Dashboard":
+        st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
+        st.info("Visual breakdowns & cohort charts go here.")
 
-    st.dataframe(filtered_df, use_container_width=True)
+    elif page == "Customer Explorer":
+        st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
+        st.info("Search, filter, and inspect individual customer records.")
