@@ -65,11 +65,14 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
 # ----------------- AUTHENTICATION -----------------
-USER_CREDENTIALS = {
-    "RehanRathod2513": "ikra@786",
-    "abdullah": "ikra@786"
-}
+# Initialize user credentials in session state to allow runtime registration
+if "user_credentials" not in st.session_state:
+    st.session_state["user_credentials"] = {
+        "RehanRathod2513": "ikra@786",
+        "abdullah": "ikra@786"
+    }
 
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
@@ -83,9 +86,6 @@ def login():
         st.write("")
         
         with st.container(border=True):
-            # Google SSO Action
-            google_svg = """<svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>"""
-            
             # Google Sign In Trigger Button
             if st.button("🌐 Continue with Google", use_container_width=True):
                 st.session_state["authenticated"] = True
@@ -94,19 +94,49 @@ def login():
 
             st.markdown('<div class="auth-separator">OR CONTINUE WITH PASSWORD</div>', unsafe_allow_html=True)
 
-            # Standard Credentials Form
-            with st.form("login_form"):
-                username = st.text_input("Username", placeholder="e.g. admin")
-                password = st.text_input("Password", type="password", placeholder="••••••••")
-                submit = st.form_submit_button("Sign In", use_container_width=True)
-                
-                if submit:
-                    if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-                        st.session_state["authenticated"] = True
-                        st.session_state["username"] = username
-                        st.rerun()
-                    else:
-                        st.error("Invalid credentials. Please try again.")
+            # Tab interface for Sign In vs Sign Up
+            tab_signin, tab_signup = st.tabs(["🔑 Sign In", "📝 Sign Up"])
+
+            # --- SIGN IN TAB ---
+            with tab_signin:
+                with st.form("login_form"):
+                    username = st.text_input("Username", placeholder="e.g. admin")
+                    password = st.text_input("Password", type="password", placeholder="••••••••")
+                    submit = st.form_submit_button("Sign In", use_container_width=True)
+                    
+                    if submit:
+                        credentials = st.session_state["user_credentials"]
+                        if username in credentials and credentials[username] == password:
+                            st.session_state["authenticated"] = True
+                            st.session_state["username"] = username
+                            st.rerun()
+                        else:
+                            st.error("Invalid credentials. Please try again.")
+
+            # --- SIGN UP TAB ---
+            with tab_signup:
+                with st.form("signup_form"):
+                    new_user = st.text_input("Choose Username", placeholder="e.g. newuser")
+                    new_pass = st.text_input("Choose Password", type="password", placeholder="••••••••")
+                    confirm_pass = st.text_input("Confirm Password", type="password", placeholder="••••••••")
+                    signup_submit = st.form_submit_button("Create Account", use_container_width=True)
+
+                    if signup_submit:
+                        clean_user = new_user.strip()
+                        credentials = st.session_state["user_credentials"]
+                        
+                        if not clean_user or not new_pass:
+                            st.warning("Please fill in all fields.")
+                        elif clean_user in credentials:
+                            st.error("Username already exists. Please choose another.")
+                        elif new_pass != confirm_pass:
+                            st.error("Passwords do not match.")
+                        elif len(new_pass) < 6:
+                            st.warning("Password must be at least 6 characters.")
+                        else:
+                            st.session_state["user_credentials"][clean_user] = new_pass
+                            st.success("Account created successfully! You can now switch to the 'Sign In' tab.")
+
 def logout():
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
@@ -133,15 +163,14 @@ else:
     # Load artifacts (cache for performance)
     @st.cache_resource
     def load_artifacts():
-        model = joblib.load("customer_segmentation_model.pkl")
-        scaler = joblib.load("customer_scaler.pkl")
-        segment_names = joblib.load("segment_names.pkl")
+        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
+        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
+        segment_names = joblib.load("segment_names.pkl")[cite: 1]
         return model, scaler, segment_names
 
     model, scaler, segment_names = load_artifacts()
 
     # View 1: Customer Segment Predictor
-   # View 1: Customer Segment Predictor
     if page == "Customer Segment Predictor":
         st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
         st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
@@ -196,14 +225,11 @@ else:
             with tab_benchmarks:
                 st.markdown("#### Customer Metric Profile")
                 
-                # Radar profile calculation (normalized scale 0 to 100)
                 categories = ['Spend Intensity', 'Basket Size', 'Satisfaction', 'Recency Score']
-                
-                # Normalize values roughly against typical thresholds
                 spend_score = min(100, (total_spend / 2500.0) * 100)
                 basket_score = min(100, (items_purchased / 25.0) * 100)
                 rating_score = (avg_rating / 5.0) * 100
-                recency_score = max(0, 100 - (recency / 90.0 * 100)) # lower days = higher score
+                recency_score = max(0, 100 - (recency / 90.0 * 100))
 
                 values = [spend_score, basket_score, rating_score, recency_score]
 
@@ -225,7 +251,6 @@ else:
             with tab_playbook:
                 st.markdown(f"#### Recommended Strategies for **{cluster_label}**")
                 
-                # Dynamic recommendations based on cluster characteristics
                 if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
                     st.success("🌟 **Priority VIP Customer**")
                     st.markdown("""
@@ -247,6 +272,8 @@ else:
                     * **Frequency Boost:** Introduce time-limited free shipping thresholds on orders over $50.
                     * **Social Proof:** Invite them to leave reviews in exchange for rewards points.
                     """)
+
+    # View 2: Dashboard
     elif page == "Dashboard":
         st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
         st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
@@ -254,9 +281,7 @@ else:
 
         @st.cache_data
         def load_and_process_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
-            
-            # Predict segments if not already present in the raw CSV
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
@@ -349,6 +374,8 @@ else:
 
         except FileNotFoundError:
             st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
+
+    # View 3: Customer Explorer
     elif page == "Customer Explorer":
         st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
         st.caption("Search, filter, and inspect detailed behavioral profiles and segment classifications.")
@@ -356,7 +383,7 @@ else:
 
         @st.cache_data
         def load_explorer_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
