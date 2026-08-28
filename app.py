@@ -109,12 +109,13 @@ else:
     model, scaler, segment_names = load_artifacts()
 
     # View 1: Customer Segment Predictor
+   # View 1: Customer Segment Predictor
     if page == "Customer Segment Predictor":
         st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
         st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
         st.divider()
 
-        # Inputs in responsive columns
+        # Input Layout
         c1, c2 = st.columns(2)
         with c1:
             total_spend = st.number_input("Total Spend ($)", min_value=0.0, value=1000.0, step=50.0)
@@ -124,22 +125,96 @@ else:
             avg_rating = st.slider("Average Rating", min_value=1.0, max_value=5.0, value=4.0, step=0.1)
             recency = st.number_input("Days Since Last Purchase", min_value=0, value=20, step=1)
 
-        if st.button("Predict Segment", type="primary", use_container_width=True):
-            # Scale & Predict
+        predict_btn = st.button("🚀 Predict Customer Segment", type="primary", use_container_width=True)
+
+        if predict_btn:
+            # Model inference
             input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
             scaled_features = scaler.transform(input_data)
             cluster_id = model.predict(scaled_features)[0]
             cluster_label = segment_names.get(cluster_id, f"Cluster {cluster_id}")
 
-            # Highlighted result card
-            st.markdown(f"""
-            <div class="result-card">
-                <span style="color: #888; font-size: 0.9rem;">Prediction Output</span>
-                <h3 style="margin: 0.3rem 0; color: #00D26A;">🎯 {cluster_label}</h3>
-                <p style="margin: 0; color: #ccc; font-size: 0.85rem;">Cluster ID: #{cluster_id} | High affinity to repeat engagement campaigns.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.write("")
+            
+            # Interactive Tab Interface
+            tab_overview, tab_benchmarks, tab_playbook = st.tabs([
+                "🎯 Segment Overview", 
+                "📊 Feature Radar & Benchmarks", 
+                "💡 Actionable Marketing Playbook"
+            ])
 
+            # Tab 1: Overview
+            with tab_overview:
+                st.markdown(f"""
+                <div class="result-card">
+                    <span style="color: #aaa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Classification Result</span>
+                    <h2 style="margin: 0.4rem 0; color: #00D26A;">{cluster_label}</h2>
+                    <p style="margin: 0; color: #ddd; font-size: 0.95rem;">Assigned Cluster ID: <b>#{cluster_id}</b></p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.write("")
+                m1, m2, m3, m4 = st.columns(4)
+                m1.metric("Spend Profile", f"${total_spend:,.2f}")
+                m2.metric("Basket Volume", f"{int(items_purchased)} items")
+                m3.metric("Engagement Rating", f"{avg_rating:.1f} / 5.0")
+                m4.metric("Activity Recency", f"{int(recency)} days ago")
+
+            # Tab 2: Feature Radar & Benchmarks
+            with tab_benchmarks:
+                st.markdown("#### Customer Metric Profile")
+                
+                # Radar profile calculation (normalized scale 0 to 100)
+                categories = ['Spend Intensity', 'Basket Size', 'Satisfaction', 'Recency Score']
+                
+                # Normalize values roughly against typical thresholds
+                spend_score = min(100, (total_spend / 2500.0) * 100)
+                basket_score = min(100, (items_purchased / 25.0) * 100)
+                rating_score = (avg_rating / 5.0) * 100
+                recency_score = max(0, 100 - (recency / 90.0 * 100)) # lower days = higher score
+
+                values = [spend_score, basket_score, rating_score, recency_score]
+
+                fig_radar = px.line_polar(
+                    r=values + [values[0]],
+                    theta=categories + [categories[0]],
+                    line_close=True,
+                    template="plotly_dark"
+                )
+                fig_radar.update_traces(fill='toself', fillcolor='rgba(255, 75, 75, 0.3)', line_color='#FF4B4B')
+                fig_radar.update_layout(
+                    polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                    showlegend=False,
+                    margin=dict(t=20, b=20, l=40, r=40)
+                )
+                st.plotly_chart(fig_radar, use_container_width=True)
+
+            # Tab 3: Actionable Marketing Playbook
+            with tab_playbook:
+                st.markdown(f"#### Recommended Strategies for **{cluster_label}**")
+                
+                # Dynamic recommendations based on cluster characteristics
+                if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
+                    st.success("🌟 **Priority VIP Customer**")
+                    st.markdown("""
+                    * **Retention:** Assign priority customer support and early beta access to product drops.
+                    * **Upselling:** Offer bespoke premium bundles and loyalty tier upgrades.
+                    * **Engagement:** Send personalized executive check-ins and exclusive discount codes.
+                    """)
+                elif recency > 45:
+                    st.warning("⚠️ **At-Risk / Churn Alert**")
+                    st.markdown("""
+                    * **Re-engagement Campaign:** Trigger automated *"We miss you"* email workflows with a 15% discount.
+                    * **Feedback Loop:** Send a 1-question NPS survey to diagnose churn drivers.
+                    * **Remarketing:** Enroll this segment in tailored Facebook/Google retargeting ads.
+                    """)
+                else:
+                    st.info("📈 **Growth & Nurturing Cohort**")
+                    st.markdown("""
+                    * **Cross-Selling:** Recommend complementary items based on previous purchase history.
+                    * **Frequency Boost:** Introduce time-limited free shipping thresholds on orders over $50.
+                    * **Social Proof:** Invite them to leave reviews in exchange for rewards points.
+                    """)
     elif page == "Dashboard":
         st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
         st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
