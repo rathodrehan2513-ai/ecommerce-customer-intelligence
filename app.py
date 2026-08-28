@@ -15,36 +15,56 @@ st.set_page_config(
 # Custom Styling for polished UI & Login Card
 st.markdown("""
 <style>
-    /* Gradient accent glow for headers */
-    .hero-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #FF4B4B, #FF8F6B);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.2rem;
+    /* Google SSO Button Styling */
+    .google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0.55rem;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #3c4043;
+        font-weight: 500;
+        font-size: 0.95rem;
+        border: 1px solid #dadce0;
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        margin-bottom: 1rem;
+    }
+    .google-btn:hover {
+        background-color: #f8f9fa;
+        box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+    }
+    .google-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
     }
     
-    /* Segment result card */
-    .result-card {
-        padding: 1.5rem;
-        border-radius: 12px;
-        background: rgba(38, 39, 48, 0.6);
-        border-left: 5px solid #00D26A;
-        margin-top: 1.2rem;
+    /* Login Form Divider */
+    .auth-separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.2rem 0;
+        color: #888;
+        font-size: 0.85rem;
     }
-    
-    /* Login card container */
-    [data-testid="stForm"] {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 2rem;
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
+    .auth-separator::before,
+    .auth-separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .auth-separator:not(:empty)::before {
+        margin-right: .5em;
+    }
+    .auth-separator:not(:empty)::after {
+        margin-left: .5em;
     }
 </style>
 """, unsafe_allow_html=True)
-
 # ----------------- AUTHENTICATION -----------------
 USER_CREDENTIALS = {
     "RehanRathod2513": "ikra@786",
