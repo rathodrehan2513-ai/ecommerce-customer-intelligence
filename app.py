@@ -85,6 +85,53 @@ st.markdown("""
         font-family: 'Orbitron', monospace;
         color: #00ff87 !important;
     }
+
+    /* Sidebar Cyberpunk Profile & Telemetry */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #090d14 0%, #05070a 100%) !important;
+        border-right: 1px solid rgba(0, 242, 254, 0.15);
+    }
+
+    .operator-hud {
+        background: rgba(0, 242, 254, 0.03);
+        border: 1px solid rgba(0, 242, 254, 0.25);
+        border-radius: 10px;
+        padding: 0.9rem;
+        margin-bottom: 1rem;
+        box-shadow: inset 0 0 12px rgba(0, 242, 254, 0.05);
+    }
+
+    .pulsing-node {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #00ff87;
+        border-radius: 50%;
+        box-shadow: 0 0 0 rgba(0, 255, 135, 0.7);
+        animation: pulse 1.8s infinite;
+        margin-right: 6px;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0.7); }
+        70% { box-shadow: 0 0 0 8px rgba(0, 255, 135, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0); }
+    }
+
+    .telemetry-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        font-family: 'Orbitron', monospace;
+        letter-spacing: 1px;
+        color: #8b949e;
+        margin: 0.3rem 0;
+    }
+
+    .telemetry-val {
+        color: #00f2fe;
+        font-weight: 700;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -163,18 +210,49 @@ if not st.session_state["authenticated"]:
     login()
 else:
     with st.sidebar:
-        st.markdown(f"🟢 **OPERATOR:** `{st.session_state['username']}`")
-        st.markdown("<p style='font-size:0.75rem; color:#00ff87;'>NODE STATUS: SYNCHRONIZED</p>", unsafe_allow_html=True)
-        if st.button("TERMINATE SESSION", use_container_width=True):
+        # Operator Identity Card
+        st.markdown(f"""
+        <div class="operator-hud">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <span class="pulsing-node"></span>
+                    <span style="font-family: 'Orbitron', monospace; font-size: 0.75rem; color: #8b949e; letter-spacing: 1px;">OPERATOR ACTIVE</span>
+                </div>
+                <span style="font-size: 0.65rem; color: #00ff87; border: 1px solid #00ff87; padding: 1px 6px; border-radius: 4px;">SYNCED</span>
+            </div>
+            <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00f2fe; font-weight: 700; margin: 0.4rem 0; text-shadow: 0 0 8px rgba(0,242,254,0.4);">
+                {st.session_state['username']}
+            </div>
+            <hr style="border: none; border-top: 1px solid rgba(0,242,254,0.15); margin: 0.4rem 0;">
+            <div class="telemetry-row"><span>NEURAL LOAD</span><span class="telemetry-val">42.8 TFLOPS</span></div>
+            <div class="telemetry-row"><span>QUANTUM LATENCY</span><span class="telemetry-val">4.2 ms</span></div>
+            <div class="telemetry-row"><span>SECURITY CIPHER</span><span class="telemetry-val" style="color: #00ff87;">AES-GCM-256</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button("🛑 TERMINATE PROTOCOL", use_container_width=True):
             logout()
-        st.divider()
-        
-        st.markdown("<p style='letter-spacing:2px; font-size:0.8rem; color:#8b949e;'>CORE MODULES</p>", unsafe_allow_html=True)
+
+        st.markdown('<div class="cyber-separator">NAVIGATION MATRIX</div>', unsafe_allow_html=True)
+
         page = st.radio(
             "Navigation",
-            ["⚡ Neural Segment Predictor", "📊 Quantum Dashboard", "🔍 Cyber Customer Explorer"],
+            [
+                "⚡ Neural Segment Predictor", 
+                "📊 Quantum Dashboard", 
+                "🔍 Cyber Customer Explorer"
+            ],
             label_visibility="collapsed"
         )
+
+        st.divider()
+
+        # Dynamic System Load Bars
+        st.markdown("<p style='font-family: Orbitron; font-size: 0.7rem; color: #8b949e; letter-spacing: 1px;'>BUFFER TELEMETRY</p>", unsafe_allow_html=True)
+        st.caption("Memory Cache: 88% Stable")
+        st.progress(0.88)
+        st.caption("Model Cluster Sync: 100%")
+        st.progress(1.0)
 
     @st.cache_resource
     def load_artifacts():
