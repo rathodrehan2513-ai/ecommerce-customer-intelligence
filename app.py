@@ -178,9 +178,9 @@ else:
 
     @st.cache_resource
     def load_artifacts():
-        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
-        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
-        segment_names = joblib.load("segment_names.pkl")[cite: 1]
+        model = joblib.load("customer_segmentation_model.pkl")
+        scaler = joblib.load("customer_scaler.pkl")
+        segment_names = joblib.load("segment_names.pkl")
         return model, scaler, segment_names
 
     model, scaler, segment_names = load_artifacts()
@@ -275,7 +275,7 @@ else:
 
         @st.cache_data
         def load_and_process_data():
-            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
+            data = pd.read_csv("customer_intelligence_data.csv")
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
@@ -406,7 +406,6 @@ else:
             with col_b2:
                 st.subheader("🎯 Cross-Segment Mean Radar Profiles")
                 cluster_means = df.groupby("Segment")[numeric_cols].mean()
-                # Normalize 0 to 100 for radar rendering
                 norm_means = (cluster_means - cluster_means.min()) / (cluster_means.max() - cluster_means.min() + 1e-6) * 100
                 
                 fig_multi_radar = go.Figure()
@@ -469,7 +468,7 @@ else:
 
         @st.cache_data
         def load_explorer_data():
-            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
+            data = pd.read_csv("customer_intelligence_data.csv")
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
