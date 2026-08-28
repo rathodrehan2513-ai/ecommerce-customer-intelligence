@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling for polished UI & Login Card
+# Custom Styling for polished UI & Cards
 st.markdown("""
 <style>
     .hero-title {
@@ -77,7 +77,7 @@ def logout():
     st.session_state["email"] = ""
     st.rerun()
 
-# ----------------- MAIN APPLICATION ROUTING -----------------
+# ----------------- MAIN APPLICATION -----------------
 if not st.session_state["authenticated"]:
     login()
 else:
@@ -100,22 +100,22 @@ else:
             label_visibility="collapsed"
         )
 
-    # Load artifacts (cache for performance)
+    # Load artifacts with clean indentation
     @st.cache_resource
-def load_artifacts():
-    model = joblib.load("customer_segmentation_model.pkl")
-    scaler = joblib.load("customer_scaler.pkl")
-    segment_names = joblib.load("segment_names.pkl")
-    return model, scaler, segment_names
+    def load_artifacts():
+        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
+        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
+        segment_names = joblib.load("segment_names.pkl")[cite: 1]
+        return model, scaler, segment_names
+
     model, scaler, segment_names = load_artifacts()
 
-    # ----------------- VIEW 1: CUSTOMER SEGMENT PREDICTOR -----------------
+    # ----------------- VIEW 1: PREDICTOR -----------------
     if page == "Customer Segment Predictor":
         st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
         st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
         st.divider()
 
-        # Input Layout
         c1, c2 = st.columns(2)
         with c1:
             total_spend = st.number_input("Total Spend ($)", min_value=0.0, value=1000.0, step=50.0)
@@ -128,7 +128,6 @@ def load_artifacts():
         predict_btn = st.button("🚀 Predict Customer Segment", type="primary", use_container_width=True)
 
         if predict_btn:
-            # Model inference
             input_data = np.array([[total_spend, items_purchased, avg_rating, recency]])
             scaled_features = scaler.transform(input_data)
             cluster_id = model.predict(scaled_features)[0]
@@ -136,14 +135,12 @@ def load_artifacts():
 
             st.write("")
             
-            # Interactive Tab Interface
             tab_overview, tab_benchmarks, tab_playbook = st.tabs([
                 "🎯 Segment Overview", 
                 "📊 Feature Radar & Benchmarks", 
                 "💡 Actionable Marketing Playbook"
             ])
 
-            # Tab 1: Overview
             with tab_overview:
                 st.markdown(f"""
                 <div class="result-card">
@@ -160,7 +157,6 @@ def load_artifacts():
                 m3.metric("Engagement Rating", f"{avg_rating:.1f} / 5.0")
                 m4.metric("Activity Recency", f"{int(recency)} days ago")
 
-            # Tab 2: Feature Radar & Benchmarks
             with tab_benchmarks:
                 st.markdown("#### Customer Metric Profile")
                 categories = ['Spend Intensity', 'Basket Size', 'Satisfaction', 'Recency Score']
@@ -186,7 +182,6 @@ def load_artifacts():
                 )
                 st.plotly_chart(fig_radar, use_container_width=True)
 
-            # Tab 3: Actionable Marketing Playbook
             with tab_playbook:
                 st.markdown(f"#### Recommended Strategies for **{cluster_label}**")
                 
@@ -212,7 +207,7 @@ def load_artifacts():
                     * **Social Proof:** Invite them to leave reviews in exchange for rewards points.
                     """)
 
-    # ----------------- VIEW 2: ANALYTICS DASHBOARD -----------------
+    # ----------------- VIEW 2: DASHBOARD -----------------
     elif page == "Dashboard":
         st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
         st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
@@ -231,7 +226,6 @@ def load_artifacts():
         try:
             df = load_and_process_data()
 
-            # KPI Summary Metrics
             kpi1, kpi2, kpi3, kpi4 = st.columns(4)
             with kpi1:
                 st.metric("Total Customers", f"{len(df):,}")
@@ -245,7 +239,6 @@ def load_artifacts():
             st.write("")
             st.divider()
 
-            # Row 1: Segment Breakdown & Scatter Analysis
             col_chart1, col_chart2 = st.columns([1, 1.3])
 
             with col_chart1:
@@ -283,7 +276,6 @@ def load_artifacts():
 
             st.divider()
 
-            # Row 2: Recency and Rating Distributions
             col_chart3, col_chart4 = st.columns(2)
 
             with col_chart3:
@@ -333,7 +325,6 @@ def load_artifacts():
         try:
             df = load_explorer_data()
 
-            # Filter Controls
             st.markdown("### 🔍 Filters & Search")
             f1, f2, f3 = st.columns([1.5, 2, 2])
 
@@ -359,7 +350,6 @@ def load_artifacts():
                     step=0.1
                 )
 
-            # Apply filters
             filtered_df = df[
                 (df["Total Spend"] >= spend_range[0]) & 
                 (df["Total Spend"] <= spend_range[1]) &
@@ -370,7 +360,6 @@ def load_artifacts():
             if selected_segment != "All" and "Segment" in df.columns:
                 filtered_df = filtered_df[filtered_df["Segment"] == selected_segment]
 
-            # Results & Export Bar
             r_col1, r_col2 = st.columns([3, 1])
             with r_col1:
                 st.markdown(f"**Showing {len(filtered_df):,} of {len(df):,} total customers**")
@@ -384,7 +373,6 @@ def load_artifacts():
                     use_container_width=True
                 )
 
-            # Interactive Data Table
             st.dataframe(
                 filtered_df,
                 use_container_width=True,
@@ -399,7 +387,6 @@ def load_artifacts():
 
             st.divider()
 
-            # Single Customer Deep Dive
             st.subheader("👤 Individual Customer Deep-Dive")
             if not filtered_df.empty:
                 selected_idx = st.selectbox(
