@@ -145,16 +145,22 @@ else:
         st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
         st.divider()
 
-        # Load dataset
         @st.cache_data
-        def load_data():
-            df = pd.read_csv("customer_intelligence_data.csv")
-            return df
+        def load_and_process_data():
+            data = pd.read_csv("customer_intelligence_data.csv")
+            
+            # Predict segments if not already present in the raw CSV
+            feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
+            if all(col in data.columns for col in feature_cols):
+                scaled_vals = scaler.transform(data[feature_cols])
+                cluster_preds = model.predict(scaled_vals)
+                data["Segment"] = [segment_names.get(c, f"Cluster {c}") for c in cluster_preds]
+            return data
 
         try:
-            df = load_data()
+            df = load_and_process_data()
 
-            # Top KPI Summary Cards
+            # KPI Summary Metrics
             kpi1, kpi2, kpi3, kpi4 = st.columns(4)
             with kpi1:
                 st.metric("Total Customers", f"{len(df):,}")
@@ -168,28 +174,26 @@ else:
             st.write("")
             st.divider()
 
-            # Row 1: Segment Distribution & Spend vs Rating
+            # Row 1: Segment Breakdown & Scatter Analysis
             col_chart1, col_chart2 = st.columns([1, 1.3])
 
             with col_chart1:
                 st.subheader("👥 Customer Segment Breakdown")
-                if "Segment" in df.columns:
-                    segment_counts = df["Segment"].value_counts().reset_index()
-                    segment_counts.columns = ["Segment", "Count"]
-                    fig_pie = px.pie(
-                        segment_counts,
-                        names="Segment",
-                        values="Count",
-                        hole=0.45,
-                        color_discrete_sequence=px.colors.qualitative.Pastel
-                    )
-                    fig_pie.update_layout(
-                        margin=dict(t=20, b=20, l=10, r=10),
-                        legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5)
-                    )
-                    st.plotly_chart(fig_pie, use_container_width=True)
-                else:
-                    st.info("Segment column not found in dataset.")
+                segment_counts = df["Segment"].value_counts().reset_index()
+                segment_counts.columns = ["Segment", "Count"]
+                
+                fig_pie = px.pie(
+                    segment_counts,
+                    names="Segment",
+                    values="Count",
+                    hole=0.45,
+                    color_discrete_sequence=px.colors.qualitative.Pastel
+                )
+                fig_pie.update_layout(
+                    margin=dict(t=20, b=20, l=10, r=10),
+                    legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
+                )
+                st.plotly_chart(fig_pie, use_container_width=True)
 
             with col_chart2:
                 st.subheader("💰 Spend vs. Items Purchased")
@@ -197,7 +201,7 @@ else:
                     df,
                     x="Items Purchased",
                     y="Total Spend",
-                    color="Segment" if "Segment" in df.columns else None,
+                    color="Segment",
                     size="Average Rating",
                     hover_data=["Days Since Last Purchase"],
                     template="plotly_dark",
@@ -208,7 +212,7 @@ else:
 
             st.divider()
 
-            # Row 2: Recency vs Rating Distribution
+            # Row 2: Recency and Rating Distributions
             col_chart3, col_chart4 = st.columns(2)
 
             with col_chart3:
@@ -237,7 +241,7 @@ else:
                 st.plotly_chart(fig_rating, use_container_width=True)
 
         except FileNotFoundError:
-            st.error("`customer_intelligence_data.csv` was not found. Please ensure the CSV file is present in the repository.")
+            st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
     elif page == "Customer Explorer":
         st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
         st.info("Search, filter, and inspect individual customer records.")
