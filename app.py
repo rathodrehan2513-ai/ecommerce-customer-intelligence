@@ -13,19 +13,17 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling: Cyberpunk Glassmorphism & Neon HUD
+# Custom Styling: Cyberpunk Glassmorphism, Animated Glowing Gradients & Neon HUD
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
 
-    /* Global Dark Theme Settings */
     .stApp {
         background: radial-gradient(circle at 10% 20%, #0d1117 0%, #05070a 90%);
         color: #e6edf3;
         font-family: 'Rajdhani', sans-serif;
     }
 
-    /* Headings & Cyberpunk Typography */
     h1, h2, h3, .hero-title {
         font-family: 'Orbitron', monospace !important;
         letter-spacing: 2px;
@@ -35,7 +33,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
     }
 
-    /* Glowing HUD Cards */
     .hud-card {
         background: rgba(13, 17, 23, 0.7);
         border: 1px solid rgba(0, 242, 254, 0.2);
@@ -66,7 +63,6 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
     }
 
-    /* Cyberpunk Divider */
     .cyber-separator {
         display: flex;
         align-items: center;
@@ -85,7 +81,6 @@ st.markdown("""
     .cyber-separator:not(:empty)::before { margin-right: 1em; }
     .cyber-separator:not(:empty)::after { margin-left: 1em; }
 
-    /* Custom Streamlit Metric & Widget Tweaks */
     div[data-testid="stMetricValue"] {
         font-family: 'Orbitron', monospace;
         color: #00ff87 !important;
@@ -183,9 +178,9 @@ else:
 
     @st.cache_resource
     def load_artifacts():
-        model = joblib.load("customer_segmentation_model.pkl")
-        scaler = joblib.load("customer_scaler.pkl")
-        segment_names = joblib.load("segment_names.pkl")
+        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
+        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
+        segment_names = joblib.load("segment_names.pkl")[cite: 1]
         return model, scaler, segment_names
 
     model, scaler, segment_names = load_artifacts()
@@ -275,12 +270,12 @@ else:
     # ----------------- VIEW 2: QUANTUM DASHBOARD -----------------
     elif page == "📊 Quantum Dashboard":
         st.markdown('<h1>// QUANTUM TELEMETRY DASHBOARD</h1>', unsafe_allow_html=True)
-        st.caption("Live spatial clustering and macro segment distributions.")
+        st.caption("Live spatial clustering, macro telemetry, correlation heatmaps, and segment benchmark comparisons.")
         st.divider()
 
         @st.cache_data
         def load_and_process_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
@@ -291,20 +286,27 @@ else:
         try:
             df = load_and_process_data()
 
-            # Futuristic Metric HUD
-            m1, m2, m3, m4 = st.columns(4)
+            # 1. 6-Column High-Density Futuristic Metric HUD
+            m1, m2, m3, m4, m5, m6 = st.columns(6)
             with m1:
-                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">TOTAL MONITORED NODES</div><div class="hud-metric-value">{len(df):,}</div></div>""", unsafe_allow_html=True)
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">TOTAL NODES</div><div class="hud-metric-value">{len(df):,}</div></div>""", unsafe_allow_html=True)
             with m2:
-                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">MEAN REVENUE YIELD</div><div class="hud-metric-value">${df['Total Spend'].mean():,.2f}</div></div>""", unsafe_allow_html=True)
+                total_rev = df['Total Spend'].sum()
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">TOTAL VOLUME</div><div class="hud-metric-value">${total_rev/1e6:.2f}M</div></div>""", unsafe_allow_html=True)
             with m3:
-                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">GLOBAL SENTIMENT</div><div class="hud-metric-value">{df['Average Rating'].mean():.2f} ★</div></div>""", unsafe_allow_html=True)
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">MEAN YIELD</div><div class="hud-metric-value">${df['Total Spend'].mean():,.0f}</div></div>""", unsafe_allow_html=True)
             with m4:
-                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">MEAN INACTIVITY CYCLE</div><div class="hud-metric-value">{df['Days Since Last Purchase'].mean():.1f}d</div></div>""", unsafe_allow_html=True)
+                avg_val_item = (df['Total Spend'] / df['Items Purchased'].replace(0, 1)).mean()
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">AVG UNIT VAL</div><div class="hud-metric-value">${avg_val_item:.1f}</div></div>""", unsafe_allow_html=True)
+            with m5:
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">SENTIMENT</div><div class="hud-metric-value">{df['Average Rating'].mean():.2f} ★</div></div>""", unsafe_allow_html=True)
+            with m6:
+                churn_risk_pct = (len(df[df['Days Since Last Purchase'] > 45]) / len(df)) * 100
+                st.markdown(f"""<div class="hud-card"><div class="hud-metric-label">LATENCY RISK</div><div class="hud-metric-value" style="color:#ff007f;">{churn_risk_pct:.1f}%</div></div>""", unsafe_allow_html=True)
 
             st.write("")
 
-            # 3D Cluster Visualizer
+            # 2. 3D Spatial Vector Clustering Visualizer
             st.subheader("🌐 3D Spatial Vector Clustering")
             fig_3d = px.scatter_3d(
                 df,
@@ -331,35 +333,130 @@ else:
 
             st.divider()
 
-            # Breakdown Charts
+            # 3. Macro Financials & Composition
             c_left, c_right = st.columns(2)
             with c_left:
-                st.subheader("🧬 Cohort Composition")
-                seg_counts = df["Segment"].value_counts().reset_index()
-                seg_counts.columns = ["Segment", "Count"]
-                fig_donut = px.pie(
-                    seg_counts,
-                    names="Segment",
-                    values="Count",
-                    hole=0.6,
+                st.subheader("🧬 Cohort Revenue vs Node Count")
+                cohort_summary = df.groupby("Segment").agg(
+                    Total_Spend=("Total Spend", "sum"),
+                    Node_Count=("Total Spend", "count")
+                ).reset_index()
+
+                fig_dual = go.Figure()
+                fig_dual.add_trace(go.Bar(
+                    x=cohort_summary["Segment"],
+                    y=cohort_summary["Total_Spend"],
+                    name="Gross Revenue ($)",
+                    marker_color="#00f2fe",
+                    opacity=0.85
+                ))
+                fig_dual.add_trace(go.Scatter(
+                    x=cohort_summary["Segment"],
+                    y=cohort_summary["Node_Count"],
+                    name="Node Count",
+                    yaxis="y2",
+                    mode="lines+markers",
+                    line=dict(color="#00ff87", width=3),
+                    marker=dict(size=8, symbol="diamond")
+                ))
+                fig_dual.update_layout(
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    yaxis=dict(title="Gross Revenue ($)", gridcolor="rgba(255,255,255,0.1)"),
+                    yaxis2=dict(title="Node Count", overlaying="y", side="right"),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                    margin=dict(t=20, b=20, l=10, r=10),
+                    template="plotly_dark"
+                )
+                st.plotly_chart(fig_dual, use_container_width=True)
+
+            with c_right:
+                st.subheader("⚡ Multi-Cluster Feature Correlation")
+                numeric_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
+                corr_matrix = df[numeric_cols].corr()
+                fig_corr = px.imshow(
+                    corr_matrix,
+                    text_auto=".2f",
+                    aspect="auto",
+                    color_continuous_scale=[[0, "#05070a"], [0.5, "#00f2fe"], [1, "#00ff87"]],
+                    template="plotly_dark"
+                )
+                fig_corr.update_layout(paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
+                st.plotly_chart(fig_corr, use_container_width=True)
+
+            st.divider()
+
+            # 4. Behavioral Density & Radar Comparison
+            col_b1, col_b2 = st.columns(2)
+            with col_b1:
+                st.subheader("💎 Spend vs Recency Density Contours")
+                fig_density_contour = px.density_contour(
+                    df,
+                    x="Days Since Last Purchase",
+                    y="Total Spend",
+                    color="Segment",
+                    marginal_x="histogram",
+                    marginal_y="box",
                     color_discrete_sequence=['#00f2fe', '#00ff87', '#ff007f', '#ffe600', '#7928ca'],
                     template="plotly_dark"
                 )
-                fig_donut.update_layout(paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
-                st.plotly_chart(fig_donut, use_container_width=True)
+                fig_density_contour.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
+                st.plotly_chart(fig_density_contour, use_container_width=True)
 
-            with c_right:
-                st.subheader("⚡ Temporal Inactivity Density")
-                fig_density = px.histogram(
-                    df,
-                    x="Days Since Last Purchase",
-                    nbins=30,
-                    marginal="rug",
-                    color_discrete_sequence=["#00f2fe"],
-                    template="plotly_dark"
+            with col_b2:
+                st.subheader("🎯 Cross-Segment Mean Radar Profiles")
+                cluster_means = df.groupby("Segment")[numeric_cols].mean()
+                # Normalize 0 to 100 for radar rendering
+                norm_means = (cluster_means - cluster_means.min()) / (cluster_means.max() - cluster_means.min() + 1e-6) * 100
+                
+                fig_multi_radar = go.Figure()
+                radar_cats = list(norm_means.columns)
+                colors = ['#00f2fe', '#00ff87', '#ff007f', '#ffe600', '#7928ca']
+                
+                for idx, (seg_name, row) in enumerate(norm_means.iterrows()):
+                    fig_multi_radar.add_trace(go.Scatterpolar(
+                        r=row.tolist() + [row.tolist()[0]],
+                        theta=radar_cats + [radar_cats[0]],
+                        fill='toself',
+                        name=seg_name,
+                        line=dict(color=colors[idx % len(colors)]),
+                        opacity=0.6
+                    ))
+                
+                fig_multi_radar.update_layout(
+                    polar=dict(
+                        radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.1)"),
+                        angularaxis=dict(gridcolor="rgba(255,255,255,0.1)")
+                    ),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    template="plotly_dark",
+                    margin=dict(t=20, b=20, l=10, r=10),
+                    legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5)
                 )
-                fig_density.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20, l=10, r=10))
-                st.plotly_chart(fig_density, use_container_width=True)
+                st.plotly_chart(fig_multi_radar, use_container_width=True)
+
+            st.divider()
+
+            # 5. Cohort Benchmark Matrix
+            st.subheader("📋 Cohort Benchmark Breakdown")
+            benchmark_table = df.groupby("Segment").agg(
+                Nodes=("Total Spend", "count"),
+                Avg_Spend=("Total Spend", "mean"),
+                Avg_Items=("Items Purchased", "mean"),
+                Avg_Rating=("Average Rating", "mean"),
+                Avg_Recency=("Days Since Last Purchase", "mean")
+            ).reset_index()
+
+            st.dataframe(
+                benchmark_table,
+                use_container_width=True,
+                column_config={
+                    "Avg_Spend": st.column_config.NumberColumn("Avg Spend", format="$%.2f"),
+                    "Avg_Items": st.column_config.NumberColumn("Avg Basket", format="%.1f units"),
+                    "Avg_Rating": st.column_config.NumberColumn("Avg Rating", format="%.2f ★"),
+                    "Avg_Recency": st.column_config.NumberColumn("Avg Recency", format="%.1f days")
+                }
+            )
 
         except FileNotFoundError:
             st.error("`customer_intelligence_data.csv` was not found.")
@@ -372,7 +469,7 @@ else:
 
         @st.cache_data
         def load_explorer_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
