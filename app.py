@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import joblib
 import plotly.express as px
+import re
+from streamlit_google_auth import Authenticate
 
 # Page configuration
 st.set_page_config(
@@ -15,7 +17,23 @@ st.set_page_config(
 # Custom Styling for polished UI & Login Card
 st.markdown("""
 <style>
-    /* Google SSO Button Styling */
+    .hero-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #FF4B4B, #FF8F6B);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.2rem;
+    }
+    
+    .result-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: rgba(38, 39, 48, 0.6);
+        border-left: 5px solid #00D26A;
+        margin-top: 1.2rem;
+    }
+    
     .google-btn {
         display: flex;
         align-items: center;
@@ -42,7 +60,6 @@ st.markdown("""
         margin-right: 10px;
     }
     
-    /* Login Form Divider */
     .auth-separator {
         display: flex;
         align-items: center;
@@ -65,15 +82,34 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-# ----------------- AUTHENTICATION -----------------
-USER_CREDENTIALS = {
-    "RehanRathod2513": "ikra@786",
-    "abdullah": "ikra@786"
-}
+
+# ----------------- AUTHENTICATION SETUP -----------------
+google_auth_configured = "google_auth" in st.secrets
+if google_auth_configured:
+    authenticator = Authenticate(
+        secret_credentials_path={
+            "installed": {
+                "client_id": st.secrets["google_auth"]["client_id"],
+                "client_secret": st.secrets["google_auth"]["client_secret"],
+                "redirect_uris": [st.secrets["google_auth"]["redirect_uri"]],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token"
+            }
+        },
+        cookie_name="customer_intelligence_auth_cookie",
+        cookie_key=st.secrets["google_auth"]["cookie_secret"],
+        cookie_expiry_days=1,
+    )
+    authenticator.check_authentification()
 
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
+    st.session_state["email"] = ""
+
+def is_valid_email(email_str):
+    pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    return re.match(pattern, email_str.strip()) is not None
 
 def login():
     col1, col2, col3 = st.columns([1, 1.8, 1])
@@ -83,42 +119,63 @@ def login():
         st.write("")
         
         with st.container(border=True):
-            # Google SSO Action
-            google_svg = """<svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>"""
-            
-            # Google Sign In Trigger Button
-            if st.button("🌐 Continue with Google", use_container_width=True):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = "Google User"
-                st.rerun()
+            # Google OAuth Button
+            if google_auth_configured:
+                authenticator.login()
+                st.markdown('<div class="auth-separator">OR SIGN IN WITH ANY EMAIL</div>', unsafe_allow_html=True)
+            else:
+                st.markdown('<div class="auth-separator">SIGN IN WITH ANY EMAIL</div>', unsafe_allow_html=True)
 
-            st.markdown('<div class="auth-separator">OR CONTINUE WITH PASSWORD</div>', unsafe_allow_html=True)
-
-            # Standard Credentials Form
-            with st.form("login_form"):
-                username = st.text_input("Username", placeholder="e.g. admin")
-                password = st.text_input("Password", type="password", placeholder="••••••••")
-                submit = st.form_submit_button("Sign In", use_container_width=True)
+            # Universal Email Access Form
+            with st.form("open_email_login_form"):
+                user_email = st.text_input("Work or Personal Email ID", placeholder="e.g. name@company.com or you@gmail.com")
+                submit = st.form_submit_button("Continue with Email 🚀", use_container_width=True)
                 
                 if submit:
-                    if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-                        st.session_state["authenticated"] = True
-                        st.session_state["username"] = username
-                        st.rerun()
+                    clean_email = user_email.strip()
+                    
+                    if not clean_email:
+                        st.warning("Please enter an email address.")
+                    elif not is_valid_email(clean_email):
+                        st.error("Please enter a valid email format (e.g. name@domain.com).")
                     else:
-                        st.error("Invalid credentials. Please try again.")
+                        email_handle = clean_email.split("@")[0].replace(".", " ").replace("_", " ").title()
+                        st.session_state["authenticated"] = True
+                        st.session_state["email"] = clean_email
+                        st.session_state["username"] = email_handle
+                        st.rerun()
+
 def logout():
+    if google_auth_configured and st.session_state.get("connected", False):
+        authenticator.logout()
     st.session_state["authenticated"] = False
+    st.session_state["connected"] = False
     st.session_state["username"] = ""
+    st.session_state["email"] = ""
     st.rerun()
 
-# ----------------- MAIN APPLICATION -----------------
-if not st.session_state["authenticated"]:
+# Determine Login State
+is_google_logged_in = st.session_state.get("connected", False)
+is_manual_logged_in = st.session_state.get("authenticated", False)
+
+# ----------------- MAIN APPLICATION ROUTING -----------------
+if not (is_google_logged_in or is_manual_logged_in):
     login()
 else:
+    # Resolve active user info
+    if is_google_logged_in:
+        user_info = st.session_state.get("user_info", {})
+        display_user = user_info.get("name", "Google User")
+        display_email = user_info.get("email", "")
+    else:
+        display_user = st.session_state.get("username", "Analyst")
+        display_email = st.session_state.get("email", "")
+
     # Sidebar Navigation & User Info
     with st.sidebar:
-        st.markdown(f"👤 **Logged in as:** `{st.session_state['username']}`")
+        st.markdown(f"👤 **Logged in as:** `{display_user}`")
+        if display_email:
+            st.caption(f"📧 `{display_email}`")
         if st.button("Log Out", use_container_width=True):
             logout()
         st.divider()
@@ -133,15 +190,14 @@ else:
     # Load artifacts (cache for performance)
     @st.cache_resource
     def load_artifacts():
-        model = joblib.load("customer_segmentation_model.pkl")
-        scaler = joblib.load("customer_scaler.pkl")
-        segment_names = joblib.load("segment_names.pkl")
+        model = joblib.load("customer_segmentation_model.pkl")[cite: 1]
+        scaler = joblib.load("customer_scaler.pkl")[cite: 1]
+        segment_names = joblib.load("segment_names.pkl")[cite: 1]
         return model, scaler, segment_names
 
     model, scaler, segment_names = load_artifacts()
 
-    # View 1: Customer Segment Predictor
-   # View 1: Customer Segment Predictor
+    # ----------------- VIEW 1: CUSTOMER SEGMENT PREDICTOR -----------------
     if page == "Customer Segment Predictor":
         st.markdown('<div class="hero-title">Predict Customer Segment</div>', unsafe_allow_html=True)
         st.caption("Classify live user behavior profiles dynamically using the trained K-Means model.")
@@ -195,15 +251,12 @@ else:
             # Tab 2: Feature Radar & Benchmarks
             with tab_benchmarks:
                 st.markdown("#### Customer Metric Profile")
-                
-                # Radar profile calculation (normalized scale 0 to 100)
                 categories = ['Spend Intensity', 'Basket Size', 'Satisfaction', 'Recency Score']
                 
-                # Normalize values roughly against typical thresholds
                 spend_score = min(100, (total_spend / 2500.0) * 100)
                 basket_score = min(100, (items_purchased / 25.0) * 100)
                 rating_score = (avg_rating / 5.0) * 100
-                recency_score = max(0, 100 - (recency / 90.0 * 100)) # lower days = higher score
+                recency_score = max(0, 100 - (recency / 90.0 * 100))
 
                 values = [spend_score, basket_score, rating_score, recency_score]
 
@@ -225,7 +278,6 @@ else:
             with tab_playbook:
                 st.markdown(f"#### Recommended Strategies for **{cluster_label}**")
                 
-                # Dynamic recommendations based on cluster characteristics
                 if "High" in cluster_label or "VIP" in cluster_label or total_spend > 1500:
                     st.success("🌟 **Priority VIP Customer**")
                     st.markdown("""
@@ -247,6 +299,8 @@ else:
                     * **Frequency Boost:** Introduce time-limited free shipping thresholds on orders over $50.
                     * **Social Proof:** Invite them to leave reviews in exchange for rewards points.
                     """)
+
+    # ----------------- VIEW 2: ANALYTICS DASHBOARD -----------------
     elif page == "Dashboard":
         st.markdown('<div class="hero-title">Analytics Dashboard</div>', unsafe_allow_html=True)
         st.caption("Comprehensive overview of customer behavior, spending patterns, and segment distributions.")
@@ -254,9 +308,7 @@ else:
 
         @st.cache_data
         def load_and_process_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
-            
-            # Predict segments if not already present in the raw CSV
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
@@ -349,6 +401,8 @@ else:
 
         except FileNotFoundError:
             st.error("`customer_intelligence_data.csv` was not found. Please verify the repository path.")
+
+    # ----------------- VIEW 3: CUSTOMER EXPLORER -----------------
     elif page == "Customer Explorer":
         st.markdown('<div class="hero-title">Customer Explorer</div>', unsafe_allow_html=True)
         st.caption("Search, filter, and inspect detailed behavioral profiles and segment classifications.")
@@ -356,7 +410,7 @@ else:
 
         @st.cache_data
         def load_explorer_data():
-            data = pd.read_csv("customer_intelligence_data.csv")
+            data = pd.read_csv("customer_intelligence_data.csv")[cite: 1]
             feature_cols = ["Total Spend", "Items Purchased", "Average Rating", "Days Since Last Purchase"]
             if all(col in data.columns for col in feature_cols):
                 scaled_vals = scaler.transform(data[feature_cols])
