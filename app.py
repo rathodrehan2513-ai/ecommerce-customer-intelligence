@@ -4,7 +4,6 @@ import numpy as np
 import joblib
 import plotly.express as px
 import re
-from streamlit_google_auth import Authenticate
 
 # Page configuration
 st.set_page_config(
@@ -33,75 +32,10 @@ st.markdown("""
         border-left: 5px solid #00D26A;
         margin-top: 1.2rem;
     }
-    
-    .google-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.55rem;
-        border-radius: 8px;
-        background-color: #ffffff;
-        color: #3c4043;
-        font-weight: 500;
-        font-size: 0.95rem;
-        border: 1px solid #dadce0;
-        cursor: pointer;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-        margin-bottom: 1rem;
-    }
-    .google-btn:hover {
-        background-color: #f8f9fa;
-        box-shadow: 0 1px 3px rgba(60,64,67,0.3);
-    }
-    .google-icon {
-        width: 18px;
-        height: 18px;
-        margin-right: 10px;
-    }
-    
-    .auth-separator {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 1.2rem 0;
-        color: #888;
-        font-size: 0.85rem;
-    }
-    .auth-separator::before,
-    .auth-separator::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .auth-separator:not(:empty)::before {
-        margin-right: .5em;
-    }
-    .auth-separator:not(:empty)::after {
-        margin-left: .5em;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 # ----------------- AUTHENTICATION SETUP -----------------
-google_auth_configured = "google_auth" in st.secrets
-if google_auth_configured:
-    authenticator = Authenticate(
-        secret_credentials_path={
-            "installed": {
-                "client_id": st.secrets["google_auth"]["client_id"],
-                "client_secret": st.secrets["google_auth"]["client_secret"],
-                "redirect_uris": [st.secrets["google_auth"]["redirect_uri"]],
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://oauth2.googleapis.com/token"
-            }
-        },
-        cookie_name="customer_intelligence_auth_cookie",
-        cookie_key=st.secrets["google_auth"]["cookie_secret"],
-        cookie_expiry_days=1,
-    )
-    authenticator.check_authentification()
-
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
@@ -119,14 +53,6 @@ def login():
         st.write("")
         
         with st.container(border=True):
-            # Google OAuth Button
-            if google_auth_configured:
-                authenticator.login()
-                st.markdown('<div class="auth-separator">OR SIGN IN WITH ANY EMAIL</div>', unsafe_allow_html=True)
-            else:
-                st.markdown('<div class="auth-separator">SIGN IN WITH ANY EMAIL</div>', unsafe_allow_html=True)
-
-            # Universal Email Access Form
             with st.form("open_email_login_form"):
                 user_email = st.text_input("Work or Personal Email ID", placeholder="e.g. name@company.com or you@gmail.com")
                 submit = st.form_submit_button("Continue with Email 🚀", use_container_width=True)
@@ -146,30 +72,17 @@ def login():
                         st.rerun()
 
 def logout():
-    if google_auth_configured and st.session_state.get("connected", False):
-        authenticator.logout()
     st.session_state["authenticated"] = False
-    st.session_state["connected"] = False
     st.session_state["username"] = ""
     st.session_state["email"] = ""
     st.rerun()
 
-# Determine Login State
-is_google_logged_in = st.session_state.get("connected", False)
-is_manual_logged_in = st.session_state.get("authenticated", False)
-
 # ----------------- MAIN APPLICATION ROUTING -----------------
-if not (is_google_logged_in or is_manual_logged_in):
+if not st.session_state["authenticated"]:
     login()
 else:
-    # Resolve active user info
-    if is_google_logged_in:
-        user_info = st.session_state.get("user_info", {})
-        display_user = user_info.get("name", "Google User")
-        display_email = user_info.get("email", "")
-    else:
-        display_user = st.session_state.get("username", "Analyst")
-        display_email = st.session_state.get("email", "")
+    display_user = st.session_state.get("username", "Analyst")
+    display_email = st.session_state.get("email", "")
 
     # Sidebar Navigation & User Info
     with st.sidebar:
