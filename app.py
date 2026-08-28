@@ -46,8 +46,8 @@ st.markdown("""
 
 # ----------------- AUTHENTICATION -----------------
 USER_CREDENTIALS = {
-    "admin": "intel2026",
-    "analyst": "growth123"
+    "admin": "RehanRathod2513",
+    "analyst": "abdullahsaleh"
 }
 
 if "authenticated" not in st.session_state:
